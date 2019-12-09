@@ -48,7 +48,7 @@ There are two things you can do about this warning:
    ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#e090d7" "#8cc4ff" "#eeeeec"])
  '(custom-enabled-themes (quote (tsdh-dark)))
  '(menu-bar-mode nil)
- '(package-selected-packages (quote (magit org-bullets which-key)))
+ '(package-selected-packages (quote (powershell magit org-bullets which-key)))
  '(tool-bar-mode nil)
  '(uniquify-buffer-name-style (quote forward) nil (uniquify)))
 (custom-set-faces
