@@ -50,7 +50,9 @@ There are two things you can do about this warning:
  '(menu-bar-mode nil)
  '(package-selected-packages (quote (powershell magit org-bullets which-key)))
  '(tool-bar-mode nil)
- '(uniquify-buffer-name-style (quote forward) nil (uniquify)))
+ '(uniquify-buffer-name-style (quote forward) nil (uniquify))
+ '(user-full-name "Ben Schmidt")
+ '(user-mail-address "benschmidt@benschmidt.tech"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
