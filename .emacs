@@ -38,6 +38,18 @@ There are two things you can do about this warning:
 ;; Key Bindings:
 (global-set-key (kbd "C-x g") 'magit-status)
 
+;; Open Links using windows browser:
+;; https://adam.kruszewski.name/2017/09/emacs-in-wsl-and-opening-links/
+;; Another option here: https://www.reddit.com/r/bashonubuntuonwindows/comments/70i8aa/making_emacs_on_wsl_open_links_in_windows_web/
+(defun my--browse-url (url &optional _new-window)
+;; new-window ignored
+"Opens link via powershell.exe"
+(interactive (browse-url-interactive-arg "URL: "))
+(let ((quotedUrl (format "start '%s'" url)))
+(apply 'call-process "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe" nil
+0 nil
+(list "-Command" quotedUrl))))
+(setq-default browse-url-browser-function 'my--browse-url)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -58,4 +70,8 @@ There are two things you can do about this warning:
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 150 :width normal :foundry "PfEd" :family "DejaVu Sans Mono")))))
+ '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 150 :width normal :foundry "PfEd" :family "DejaVu Sans Mono"))))
+ '(org-level-1 ((t (:inherit outline-1 :box nil :height 1.35))))
+ '(org-level-2 ((t (:inherit outline-2 :box nil :height 1.25))))
+ '(org-level-3 ((t (:inherit outline-3 :box nil :height 1.15))))
+ '(org-level-4 ((t (:inherit outline-4 :box nil :height 1.1)))))
