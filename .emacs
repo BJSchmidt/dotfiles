@@ -1,46 +1,101 @@
-;; MELPA:
+;;;; Ben Schmidt's .emacs config
+;; 12/4/2019
+
+;;;; MELPA:
 ;; Customized to try using HTTPS and failback to HTTP - From Melpa.org install instructions:
-(require 'package)
-(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
-                    (not (gnutls-available-p))))
-       (proto (if no-ssl "http" "https")))
-  (when no-ssl
-    (warn "\
-Your version of Emacs does not support SSL connections,
-which is unsafe because it allows man-in-the-middle attacks.
-There are two things you can do about this warning:
-1. Install an Emacs version that does support SSL and be safe.
-2. Remove this warning from your init file so you won't see it again."))
-  ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
-  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
-  ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
-  (when (< emacs-major-version 24)
-    ;; For important compatibility libraries like cl-lib
-    (add-to-list 'package-archives (cons "gnu" (concat proto "://elpa.gnu.org/packages/")))))
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
-(package-initialize)
+;; (require 'package)
+;; (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
+;;                     (not (gnutls-available-p))))
+;;        (proto (if no-ssl "http" "https")))
+;;   (when no-ssl
+;;     (warn "\
+;; Your version of Emacs does not support SSL connections,
+;; which is unsafe because it allows man-in-the-middle attacks.
+;; There are two things you can do about this warning:
+;; 1. Install an Emacs version that does support SSL and be safe.
+;; 2. Remove this warning from your init file so you won't see it again."))
+;;   ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
+;;   (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
+;;   ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
+;;   (when (< emacs-major-version 24)
+;;     ;; For important compatibility libraries like cl-lib
+;;     (add-to-list 'package-archives (cons "gnu" (concat proto "://elpa.gnu.org/packages/")))))
+;; ;; Added by Package.el.  This must come before configurations of
+;; ;; installed packages.  Don't delete this line.  If you don't want it,
+;; ;; just comment it out by adding a semicolon to the start of the line.
+;; ;; You may delete these explanatory comments.
+;; (package-initialize)
 
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
+;;;; straight.el: next-generation, purely functional package manager for the Emacs hacker.
+;; replaces the Melpa config & package.el (use-package package) and (package-initialize) above.
+;; https://github.com/raxod502/straight.el
+;; straight.el bootstrap code:
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+;; Set use-package to install missing packages using straight.el:
+(setq straight-use-package-by-default t)
 
-;; Packages:
-(require 'which-key)
-(setq which-key-idle-delay 0.001)
+;;;; Install use-package with Straight:
+(straight-use-package 'use-package)
+(require 'use-package)
+;; Now that straight and use-package are loaded we can install & load packages like:
+;; (use-package foo)
+;; See: https://github.com/jwiegley/use-package#package-installation
+;; We can set keybindings & variables inside the package declaration like this:
+;; (use-package ace-jump-mode
+;;   :bind ("C-." . ace-jump-mode)
+;;   :init (setq var-foo t))
+;; Because the variable var-foo is set in the :init block, it is set before the package loads.
+
+;;;; Packages:
+(use-package which-key
+  :init (setq which-key-idle-delay 0.001))
 (which-key-mode)
 ;; https://github.com/sabof/org-bullets
-(require 'org-bullets)
-(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+(use-package org-bullets
+  :hook (org-mode . org-bullets-mode))
+;; (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+;; (setq org-bullets-bullet-list '("◉" "⁑" "⁂" "❖" "✮" "✱" "✸")))
+;; (setq org-bullets-bullet-list '("◉" "⁑" "⁂" "❖" "✮" "✱" "✸")))
+(use-package org-roam
+      :after org
+      :hook 
+      ((org-mode . org-roam-mode)
+       (after-init . org-roam--build-cache-async) ;; optional!
+       )
+      :straight (:host github :repo "jethrokuan/org-roam" :branch "develop")
+      :custom
+      (org-roam-directory "~/zettels/")
+      :bind
+      ("C-c n l" . org-roam)
+      ("C-c n t" . org-roam-today)
+      ("C-c n f" . org-roam-find-file)
+      ("C-c n i" . org-roam-insert)
+      ("C-c n g" . org-roam-show-graph))
+
+
+;;;; Key Bindings:
+;; Magit:
+(global-set-key (kbd "C-x g") 'magit-status)
+
+
+;;;; Configuration:
+;; Themes:
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
+(load-theme 'vscode-dark-plus t)
 
 ;; Change all prompts to y or n
 (defalias 'yes-or-no-p 'y-or-n-p)
-
-;; Fontify code in code blocks
-(setq org-src-fontify-natively t)
-
-;; Key Bindings:
-(global-set-key (kbd "C-x g") 'magit-status)
 
 ;; Open Links using windows browser:
 ;; https://adam.kruszewski.name/2017/09/emacs-in-wsl-and-opening-links/
@@ -55,13 +110,15 @@ There are two things you can do about this warning:
 (list "-Command" quotedUrl))))
 (setq-default browse-url-browser-function 'my--browse-url)
 
-;; Org Mode Settings:
+;;;; Org Mode Settings:
+;; Org Agenda & Clock:
 (setq org-agenda-files (directory-files-recursively "~/org/" "^[^.#]+.org$"))
 (setq org-agenda-skip-deadline-prewarning-if-scheduled t )
 (setq org-log-note-clock-out t) ;; Prompt for a note when clocking out.
+;; Org Fontify code in code blocks:
+(setq org-src-fontify-natively t)
 
 
-(load-theme 'vscode-dark-plus t)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
