@@ -62,26 +62,37 @@
   :init (setq which-key-idle-delay 0.001))
 (which-key-mode)
 ;; https://github.com/sabof/org-bullets
+
+;;; Org Mode:
+;; Org Agenda & Clock:
+(setq org-agenda-files (directory-files-recursively "~/org/" "^[^.#]+.org$"))
+(setq org-agenda-skip-deadline-prewarning-if-scheduled t )
+(setq org-log-note-clock-out t) ;; Prompt for a note when clocking out.
+;; Org Fontify code in code blocks:
+(setq org-src-fontify-natively t)
+
 (use-package org-bullets
   :hook (org-mode . org-bullets-mode))
 ;; (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 ;; (setq org-bullets-bullet-list '("◉" "⁑" "⁂" "❖" "✮" "✱" "✸")))
 ;; (setq org-bullets-bullet-list '("◉" "⁑" "⁂" "❖" "✮" "✱" "✸")))
+
 (use-package org-roam
       :after org
       :hook 
-      ((org-mode . org-roam-mode)
-       (after-init . org-roam--build-cache-async) ;; optional!
-       )
+      (after-init . org-roam-mode)
       :straight (:host github :repo "jethrokuan/org-roam" :branch "develop")
       :custom
       (org-roam-directory "~/zettels/")
-      :bind
-      ("C-c n l" . org-roam)
-      ("C-c n t" . org-roam-today)
-      ("C-c n f" . org-roam-find-file)
-      ("C-c n i" . org-roam-insert)
-      ("C-c n g" . org-roam-show-graph))
+      :bind (:map org-roam-mode-map
+              (("C-c n l" . org-roam)
+               ("C-c n f" . org-roam-find-file)
+               ("C-c n g" . org-roam-show-graph)
+	       ("C-c n t" . org-roam-today))
+              :map org-mode-map
+              (("C-c n i" . org-roam-insert))))
+
+(use-package neotree)
 
 
 ;;;; Key Bindings:
@@ -110,15 +121,6 @@
 (list "-Command" quotedUrl))))
 (setq-default browse-url-browser-function 'my--browse-url)
 
-;;;; Org Mode Settings:
-;; Org Agenda & Clock:
-(setq org-agenda-files (directory-files-recursively "~/org/" "^[^.#]+.org$"))
-(setq org-agenda-skip-deadline-prewarning-if-scheduled t )
-(setq org-log-note-clock-out t) ;; Prompt for a note when clocking out.
-;; Org Fontify code in code blocks:
-(setq org-src-fontify-natively t)
-
-
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -137,9 +139,6 @@
  '(jdee-db-spec-breakpoint-face-colors (cons "#1E2029" "#565761"))
  '(menu-bar-mode nil)
  '(objed-cursor-color "#ff5555")
- '(org-agenda-files
-   (quote
-    ("/home/higman/org/personal/Microsoft/Windows_Server.org" "/home/higman/org/personal/Programming/Programming_Ideas.org" "/home/higman/org/personal/emacs/OrgMode_Notes.org" "/home/higman/org/personal/emacs/Spacemacs_Notes.org" "/home/higman/org/personal/BlogIdeas.org" "/home/higman/org/personal/Bookmarks.org" "/home/higman/org/personal/DevOps.org" "/home/higman/org/personal/Entertainment.org" "/home/higman/org/personal/Inbox.org" "/home/higman/org/personal/Networking.org" "/home/higman/org/personal/Personal.org" "/home/higman/org/personal/Pottery.org" "/home/higman/org/personal/Powershell.org" "/home/higman/org/personal/Professional.org" "/home/higman/org/personal/Shopping.org" "/home/higman/org/personal/misc.org" "/home/higman/org/personal/recipes.org" "/home/higman/org/personal/unraid.org" "/home/higman/org/ticketmaster/ticketmaster.org" "/home/higman/org/Bookmarks.org")))
  '(package-selected-packages
    (quote
     (undo-tree doom-themes powershell magit org-bullets which-key)))
@@ -175,7 +174,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 150 :width normal :foundry "PfEd" :family "DejaVu Sans Mono"))))
+ '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 100 :width normal :foundry "PfEd" :family "DejaVu Sans Mono"))))
  '(org-level-1 ((t (:inherit outline-1 :box nil :height 1.35))))
  '(org-level-2 ((t (:inherit outline-2 :box nil :height 1.25))))
  '(org-level-3 ((t (:inherit outline-3 :box nil :height 1.15))))
