@@ -94,16 +94,18 @@
 
 (use-package neotree)
 
-
-;;;; Key Bindings:
-;; Magit:
-(global-set-key (kbd "C-x g") 'magit-status)
+(use-package magit
+  :custom
+  (global-set-key (kbd "C-x g") 'magit-status))
 
 
 ;;;; Configuration:
 ;; Themes:
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
-(load-theme 'vscode-dark-plus t)
+(use-package vscode-dark-plus-theme
+  :straight (:host github :repo "ianpan870102/vscode-dark-plus-emacs-theme")
+  :custom
+  (add-to-list 'custom-theme-load-path "~/.emacs.d/straight/repost/vscode-dark-plus-emacs-theme/")
+  (load-theme 'vscode-dark-plus t))
 
 ;; Change all prompts to y or n
 (defalias 'yes-or-no-p 'y-or-n-p)
