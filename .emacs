@@ -100,6 +100,28 @@
   :custom
   (global-set-key (kbd "C-x g") 'magit-status))
 
+(use-package deft
+  :after org
+  :bind ("C-c n d" . deft)
+  :custom
+  (deft-recursive t)
+  (deft-use-filter-string-for-filename t)
+  (deft-default-extension "org")
+  (deft-directory org-roam-directory))
+
+(use-package helm
+  :straight (:host github :repo "https://github.com/emacs-helm/helm" :branch "master")
+  :bind (("M-x" . helm-M-x)
+	 ("C-x r b" . helm-filtered-bookmarks)
+	 ("C-x C-f" . helm-find-files)
+	 )
+  )
+;;(global-set-key (kbd "M-x") #'helm-M-x)
+;;(global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
+;;(global-set-key (kbd "C-x C-f") #'helm-find-files)
+(helm-mode 1)
+;;(use-package helm-projectile)
+
 
 ;;;; Configuration:
 ;; Themes:
