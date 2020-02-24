@@ -60,8 +60,7 @@
 ;;;; Packages:
 (use-package which-key
   :init (setq which-key-idle-delay 0.001))
-(which-key-mode)
-;; https://github.com/sabof/org-bullets
+(which-key-mode 1)
 
 ;;; Org Mode:
 ;; Org Agenda & Clock:
