@@ -69,9 +69,11 @@
 (setq org-log-note-clock-out t) ;; Prompt for a note when clocking out.
 ;; Org Fontify code in code blocks:
 (setq org-src-fontify-natively t)
+(setq org-return-follows-link t) ;; Use return on a link in an editable buffer will follow the link instead of inserting a new line.
 
 (use-package org-bullets
   :hook (org-mode . org-bullets-mode))
+;; https://github.com/sabof/org-bullets
 ;; (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 ;; (setq org-bullets-bullet-list '("◉" "⁑" "⁂" "❖" "✮" "✱" "✸")))
 ;; (setq org-bullets-bullet-list '("◉" "⁑" "⁂" "❖" "✮" "✱" "✸")))
@@ -81,8 +83,7 @@
       :hook 
       (after-init . org-roam-mode)
       :straight (:host github :repo "jethrokuan/org-roam" :branch "develop")
-      :custom
-      (org-roam-directory "~/zettels/")
+      :custom ((org-roam-directory "~/zettels/"))
       :bind (:map org-roam-mode-map
               (("C-c n l" . org-roam)
                ("C-c n f" . org-roam-find-file)
@@ -90,6 +91,8 @@
 	       ("C-c n t" . org-roam-today))
               :map org-mode-map
               (("C-c n i" . org-roam-insert))))
+(setq org-roam-buffer-width 0.2)
+(setq org-roam-link-title-format "ƶ:%s")
 
 (use-package neotree)
 
