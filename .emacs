@@ -122,6 +122,7 @@
 (helm-mode 1)
 ;;(use-package helm-projectile)
 
+(use-package powershell)
 
 ;;;; Configuration:
 ;; Themes:
@@ -153,18 +154,28 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(add-to-list (quote custom-theme-load-path) t)
  '(ansi-color-names-vector
    ["#282a36" "#ff5555" "#50fa7b" "#f1fa8c" "#61bfff" "#ff79c6" "#8be9fd" "#f8f8f2"])
  '(custom-enabled-themes (quote (vscode-dark-plus-GrayBackground)))
  '(custom-safe-themes
    (quote
-    ("7e88785f415a689c11610ec8e940d3e994eb25a9973474f7894fd5ae234ce18a" "15da14568df794266cd571db282a5776fc07065c661224225d309b389a26731a" "3082bb04a78ecf18f20f8220fb67aba8a02b43c289f48d72e530250e55e335a2" "ca849ae0c889eb918785cdc75452b1e11a00848a5128a95a23872e0119ccc8f4" default)))
+    ("55cf8d1507ce65a9c84cafd25c901faa94f6cc958e7dd5b345ab6efedfeed0e2" "7e88785f415a689c11610ec8e940d3e994eb25a9973474f7894fd5ae234ce18a" "15da14568df794266cd571db282a5776fc07065c661224225d309b389a26731a" "3082bb04a78ecf18f20f8220fb67aba8a02b43c289f48d72e530250e55e335a2" "ca849ae0c889eb918785cdc75452b1e11a00848a5128a95a23872e0119ccc8f4" default)))
+ '(deft-default-extension "org" t)
+ '(deft-directory "~/zettels/")
+ '(deft-recursive t)
+ '(deft-use-filter-string-for-filename t)
  '(fci-rule-color "#6272a4")
+ '(global-set-key "g" t)
+ '(helm-completion-style (quote emacs))
  '(jdee-db-active-breakpoint-face-colors (cons "#1E2029" "#bd93f9"))
  '(jdee-db-requested-breakpoint-face-colors (cons "#1E2029" "#50fa7b"))
  '(jdee-db-spec-breakpoint-face-colors (cons "#1E2029" "#565761"))
+ '(load-theme (quote vscode-dark-plus) t)
  '(menu-bar-mode nil)
  '(objed-cursor-color "#ff5555")
+ '(org-roam-directory "~/zettels/")
+ '(org-roam-mode t nil (org-roam))
  '(package-selected-packages
    (quote
     (undo-tree doom-themes powershell magit org-bullets which-key)))
