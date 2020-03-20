@@ -110,7 +110,7 @@
   (deft-directory org-roam-directory))
 
 (use-package helm
-  :straight (:host github :repo "https://github.com/emacs-helm/helm" :branch "master")
+  :straight (:host github :repo "emacs-helm/helm" :branch "master")
   :bind (("M-x" . helm-M-x)
 	 ("C-x r b" . helm-filtered-bookmarks)
 	 ("C-x C-f" . helm-find-files)
@@ -129,7 +129,7 @@
 (use-package vscode-dark-plus-theme
   :straight (:host github :repo "ianpan870102/vscode-dark-plus-emacs-theme")
   :custom
-  (add-to-list 'custom-theme-load-path "~/.emacs.d/straight/repost/vscode-dark-plus-emacs-theme/")
+  (add-to-list 'custom-theme-load-path "~/.emacs.d/straight/repos/vscode-dark-plus-emacs-theme/")
   (load-theme 'vscode-dark-plus t))
 
 ;; Change all prompts to y or n
