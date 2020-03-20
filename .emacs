@@ -127,6 +127,8 @@
 (use-package pdf-tools) ; Requires some install external.
 ; See: https://github.com/politza/pdf-tools
 
+(use-package org-noter)
+
 ;;;; Configuration:
 ;; Themes:
 (use-package vscode-dark-plus-theme
