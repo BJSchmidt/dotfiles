@@ -124,7 +124,8 @@
 
 (use-package powershell)
 
-(use-package pdf-tools)
+(use-package pdf-tools) ; Requires some install external.
+; See: https://github.com/politza/pdf-tools
 
 ;;;; Configuration:
 ;; Themes:
