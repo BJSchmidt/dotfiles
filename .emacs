@@ -124,6 +124,8 @@
 
 (use-package powershell)
 
+(use-package pdf-tools)
+
 ;;;; Configuration:
 ;; Themes:
 (use-package vscode-dark-plus-theme
