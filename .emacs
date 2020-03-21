@@ -115,19 +115,24 @@
 ;; Change all prompts to y or n
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-;; Open Links using windows browser:
-;; https://adam.kruszewski.name/2017/09/emacs-in-wsl-and-opening-links/
-;; Another option here: https://www.reddit.com/r/bashonubuntuonwindows/comments/70i8aa/making_emacs_on_wsl_open_links_in_windows_web/
-(defun my--browse-url (url &optional _new-window)
-;; new-window ignored
-"Opens link via powershell.exe"
-(interactive (browse-url-interactive-arg "URL: "))
-(let ((quotedUrl (format "start '%s'" url)))
-(apply 'call-process "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe" nil
-0 nil
-(list "-Command" quotedUrl))))
-(setq-default browse-url-browser-function 'my--browse-url)
-
+;; WSL2 Specific configuration:
+(when (string-match "-[Mm]icrosoft" operating-system-release)
+  ;; WSL: WSL1 has "-Microsoft", WSL2 has "-microsoft-standard"
+  
+  ;; Open Links using windows browser:
+  ;; https://adam.kruszewski.name/2017/09/emacs-in-wsl-and-opening-links/
+  ;; Another option here: https://www.reddit.com/r/bashonubuntuonwindows/comments/70i8aa/making_emacs_on_wsl_open_links_in_windows_web/
+  (defun my--browse-url (url &optional _new-window)
+    ;; new-window ignored
+    "Opens link via powershell.exe"
+    (interactive (browse-url-interactive-arg "URL: "))
+    (let ((quotedUrl (format "start '%s'" url)))
+      (apply 'call-process "/mnt/c/Program Files/PowerShell/7/pwsh.exe" nil
+	     0 nil
+	     (list "-Command" quotedUrl))))
+  ; (apply 'call-process "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe" nil
+  (setq-default browse-url-browser-function 'my--browse-url)
+)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
