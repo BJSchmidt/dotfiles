@@ -42,7 +42,7 @@
   :bind (("C-c l" . org-store-link)
 	 ("C-c C-l" . org-insert-link)))
 
-(add-hook 'org-mode-hook #'custom-org-hook)
+(add-hook 'org-mode-hook #'custom-org-hook) ;https://emacs.stackexchange.com/questions/5358/proper-way-to-enable-minor-mode
 (defun custom-org-hook ()
   (org-indent-mode 1)
   (visual-line-mode 1)
