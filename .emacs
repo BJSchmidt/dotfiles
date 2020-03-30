@@ -38,7 +38,10 @@
 (which-key-mode 1)
 
 ;;; Org Mode:
-(use-package org)
+(use-package org
+  :bind (("C-c l" . org-store-link)
+	 ("C-c C-l" . org-insert-link))
+  )
 ;; Org Agenda & Clock:
 (setq org-agenda-files (directory-files-recursively "~/org/" "^[^.#]+.org$"))
 (setq org-agenda-skip-deadline-prewarning-if-scheduled t )
