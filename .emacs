@@ -49,7 +49,7 @@
   )
 
 ;; Org Agenda & Clock:
-(setq org-agenda-files (directory-files-recursively "~/org/" "^[^.#]+.org$"))
+(setq org-agenda-files (directory-files-recursively "~/zettels/" "^[^.#]+.org$"))
 (setq org-agenda-skip-deadline-prewarning-if-scheduled t )
 (setq org-log-note-clock-out t) ;; Prompt for a note when clocking out.
 ;; Org Fontify code in code blocks:
@@ -78,6 +78,7 @@
               (("C-c n i" . org-roam-insert))))
 (setq org-roam-buffer-width 0.2)
 (setq org-roam-link-title-format "ƶ:%s")
+(add-hook 'org-roam-backlinks-mode-hook (lambda () (flyspell-mode -1))) ; disable flyspell in org-roam-backlinks buffers
 
 (use-package org-noter)
 
@@ -148,6 +149,42 @@
   ; (apply 'call-process "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe" nil
   (setq-default browse-url-browser-function 'my--browse-url)
 )
+
+;; Transclude files:
+;; https://stackoverflow.com/questions/15328515/iso-transclusion-in-emacs-org-mode
+;; auto-populate with C-c C-x C-u.
+;; Skip the min and max args to include the entire file.
+;; Note that you can bind org-update-all-dblocks to a hook, so that this range is updated whenever you visit the file or save.
+(defun org-dblock-write:transclusion (params)
+  (progn
+    (with-temp-buffer
+      (insert-file-contents (plist-get params :filename))
+      (let ((range-start (or (plist-get params :min) (line-number-at-pos (point-min))))
+            (range-end (or (plist-get params :max) (line-number-at-pos (point-max)))))
+        (copy-region-as-kill (line-beginning-position range-start)
+                             (line-end-position range-end))))
+    (yank)))
+
+;;Example:
+;;#+BEGIN: transclusion :filename "~/testfile.org" :min 2 :max 4
+;;#+END:
+
+;; transcludePS does the same thing as the transclusion dynamic block above, but wraps the transcluded content in a powershell src block:
+;; auto-populate with C-c C-x C-u.
+(defun org-dblock-write:transcludePS (params)
+  (progn
+    (insert "#+begin_src powershell")
+    (newline)
+    (with-temp-buffer
+      (insert-file-contents (plist-get params :filename))
+      (let ((range-start (or (plist-get params :min) (line-number-at-pos (point-min))))
+            (range-end (or (plist-get params :max) (line-number-at-pos (point-max)))))
+        (copy-region-as-kill (line-beginning-position range-start)
+                             (line-end-position range-end))))
+    (yank)
+    (newline)
+    (insert "#+end_src")))
+
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
