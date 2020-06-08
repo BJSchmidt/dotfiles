@@ -124,3 +124,7 @@ if uname -a | grep microsoft; then
    export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0.0
    alias em='setsid emacs'
 fi
+
+# Set git identity
+git config --global user.email "benschmidt@benschmidt.tech"
+git config --global user.name "Ben Schmidt"
