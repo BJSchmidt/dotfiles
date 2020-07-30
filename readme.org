@@ -1,4 +1,6 @@
-New Machine Setup
+#+TITLE:     New Machine Setup
+#+AUTHOR:    Ben Schmidt
+#+EMAIL:     benschmidt@benschmidt.tech
 
 * Create SSH directory
 #+BEGIN_SRC shell
