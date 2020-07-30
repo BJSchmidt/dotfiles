@@ -9,6 +9,7 @@
 (setq user-full-name "Ben Schmidt"
       user-mail-address "benschmidt@benschmidt.tech")
 
+
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:
 ;;
@@ -30,7 +31,9 @@
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type 'relative)
-(setq which-key-idle-delay 0.001)
+
+(setq which-key-idle-delay 0.0001)
+(setq auto-save-default t)
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -86,6 +89,34 @@
     (newline)
     (insert "#+end_src")))
 
+(use-package centaur-tabs
+  :config
+  (centaur-tabs-mode t)
+  (setq centaur-tabs-style "wave"
+        centaur-tabs-height 32
+        centaur-tabs-set-modified-marker t
+        centaur-tabs-modified-marker "o"
+        centaur-tabs-set-icons t
+        centaur-tabs-gray-out-icons 'buffer
+        centaur-tabs-set-bar 'under
+        x-underline-at-descent-line t)
+  (defun centaur-tabs-hide-tab (x)
+    (let ((name (format "%s" x)))
+      (or
+       (string-prefix-p "*epc" name)
+       (string-prefix-p "*helm" name)
+       (string-prefix-p "*Helm" name)
+       (string-prefix-p "*Compile-Log*" name)
+       (string-prefix-p "*lsp" name)
+       (and (string-prefix-p "magit" name)
+            (not (file-name-extension name))))))
+  :bind
+  ("C-<prior>" . centaur-tabs-backward)
+  ("C-<next>" . centaur-tabs-forward)
+  (:map evil-normal-state-map
+   ("g t" . centaur-tabs-forward)
+   ("g T" . centaur-tabs-backward))
+  )
 
 ;; WSL2 Specific configuration:
 (when (string-match "-[Mm]icrosoft" operating-system-release)
