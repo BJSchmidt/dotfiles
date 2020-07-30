@@ -1,0 +1,60 @@
+New Machine Setup
+
+* Create SSH directory
+#+BEGIN_SRC shell
+mkdir ~/.ssh
+#+END_SRC
+
+* Copy SSH Keys to new machine
+Left as exercise for the reader.
+
+* Fix SSH permissions
+#+BEGIN_SRC shell
+chmod 700 ~/.ssh
+chmod 644 ~/.ssh/authorized_keys
+chmod 644 ~/.ssh/known_hosts
+chmod 644 ~/.ssh/config
+chmod 600 ~/.ssh/id_rsa
+chmod 644 ~/.ssh/*.pub
+#+END_SRC
+
+* Clone dotfiles repo to ~/repos/dotfiles
+#+BEGIN_SRC shell
+git clone git@github.com:BenSchmidtTech/dotfiles.git ~/repos/dotfiles/
+#+END_SRC
+
+* Create dotfiles symlinks
+Needs to be updated to check if running under WSL, and if so grab the correct profile name.
+#+BEGIN_SRC shell
+. ~/repos/dotfiles/create_symlinks.sh
+#+END_SRC
+
+* Install Emacs
+#+BEGIN_SRC shell
+sudo apt update
+sudo apt install emacs
+#+END_SRC
+
+* Install Doom Emacs
+#+BEGIN_SRC shell
+git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
+~/.emacs.d/bin/doom install
+#+END_SRC
+
+* Org Roam requires sqlite3. Install it.
+#+BEGIN_SRC shell
+sudo apt install sqlite3
+#+END_SRC
+
+* Doom Sync - Configure Doom
+#+BEGIN_SRC shell
+doom sync
+#+END_SRC
+
+* Run emacs
+#+BEGIN_SRC shell
+emacs &
+#+END_SRC
+
+* Build Org Roam Cache
+<spc> n r f
