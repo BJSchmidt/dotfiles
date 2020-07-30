@@ -119,11 +119,17 @@ fi
 export PATH=~/.emacs.d/bin:$PATH
 
 # Test for WSL and configure accordingly:
-if uname -a | grep microsoft; then
+if uname -a | grep Microsoft > /dev/null; then
+   # Running under WSL1
+   export DISPLAY=127.0.0.1:0.0
+
+elif uname -a | grep microsoft > /dev/null; then
+   # Running under WSL2
    # Export display for connecting to X from x410 in Windows
    export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0.0
-   alias em='setsid emacs'
 fi
+
+alias em='setsid emacs'
 
 # Set git identity
 git config --global user.email "benschmidt@benschmidt.tech"
