@@ -8,7 +8,9 @@ mkdir ~/.ssh
 #+END_SRC
 
 * Copy SSH Keys to new machine
+#+BEGIN_SRC shell
 scp username@OtherMachineAddress:/mnt/user/username/Documents/.ssh/* ~/.ssh/
+#+END_SRC
 
 * Fix SSH permissions
 #+BEGIN_SRC shell
