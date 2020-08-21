@@ -2,13 +2,13 @@
 #+AUTHOR:    Ben Schmidt
 #+EMAIL:     benschmidt@benschmidt.tech
 
-* Create SSH directory
+* Create SSH directory if it doesn't exist already
 #+BEGIN_SRC shell
 mkdir ~/.ssh
 #+END_SRC
 
 * Copy SSH Keys to new machine
-Left as exercise for the reader.
+scp username@OtherMachineAddress:/mnt/user/username/Documents/.ssh/* ~/.ssh/
 
 * Fix SSH permissions
 #+BEGIN_SRC shell
