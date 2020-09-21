@@ -9,8 +9,6 @@
 (package! org-noter)
 (package! evil-snipe)
 
-(package! centaur-tabs
-  :recipe (:host github :repo "ema2159/centaur-tabs"))
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
 ;(package! some-package)
 
