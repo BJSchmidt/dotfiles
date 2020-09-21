@@ -32,7 +32,15 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type 'relative)
 
+;; which-key
 (setq which-key-idle-delay 0.0001)
+;; https://emacs.stackexchange.com/questions/59554/how-do-i-disable-centaur-tabs-in-ispell-choices-buffer
+(defun wk-no-tabs (&optional prefix-keys from-keymap filter prefix-title)
+  (with-current-buffer which-key--buffer
+    (centaur-tabs-local-mode)))
+(advice-add 'which-key--create-buffer-and-show :after #'wk-no-tabs)
+
+
 (setq auto-save-default t)
 
 ;; If you use `org' and don't want your org files in the default location below,
