@@ -61,6 +61,43 @@
 ;;(use-package pdf-tools) ; Requires some install external.
 ;;;; See: https://github.com/politza/pdf-tools
 
+;;;; Powershell
+;; PWSH Path in Ubuntu should normally be /usr/bin/pwsh
+;; However pwsh has not yet been published for Ubuntu 20.04:
+;; https://github.com/PowerShell/PowerShell/issues/12626
+;;
+;; As a temporary hack, it can be installed via the dotnet sdk:
+;; https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-linux?view=powershell-7#ubuntu-2004
+;;
+;; # Download the Microsoft repository GPG keys
+;; wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
+;;
+;; # Register the Microsoft repository GPG keys
+;; sudo dpkg -i packages-microsoft-prod.deb
+;;
+;; # Update the list of products
+;; sudo apt-get update
+;;
+;; # Enable the "universe" repositories
+;; sudo add-apt-repository universe
+;;
+;; # Install DotNet
+;; sudo apt-get install dotnet-sdk-3.1 -y
+;;
+;; # Install pwsh
+;; dotnet tool install -g powershell
+;;
+;; # Reboot Ubuntu or stop WSL2:
+;; # From the WSL2 Host machine, run
+;; wsl --shutdown
+;;
+;; Then you can re-open your Ubuntu sesssion
+;;
+;; Configure LSP support for pwsh in emacs:
+;; M-x lsp-install-server
+;; select "pwsh-ls"
+;;
+(setq lsp-pwsh-exe "~/.dotnet/tools/pwsh")
 
 ;;;; Transclude files:
 ;; https://stackoverflow.com/questions/15328515/iso-transclusion-in-emacs-org-mode
@@ -143,6 +180,7 @@
 	     (list "-Command" quotedUrl))))
   ; (apply 'call-process "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe" nil
   (setq-default browse-url-browser-function 'my--browse-url)
+
 )
 
 
