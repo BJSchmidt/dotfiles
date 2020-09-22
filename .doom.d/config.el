@@ -34,6 +34,7 @@
 
 ;; which-key
 (setq which-key-idle-delay 0.0001)
+;; Disable CentaurTabs for which-key buffers:
 ;; https://emacs.stackexchange.com/questions/59554/how-do-i-disable-centaur-tabs-in-ispell-choices-buffer
 (defun wk-no-tabs (&optional prefix-keys from-keymap filter prefix-title)
   (with-current-buffer which-key--buffer
