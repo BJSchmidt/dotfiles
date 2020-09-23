@@ -154,7 +154,7 @@
 ;; select "pwsh-ls"
 ;;
 (setq lsp-pwsh-exe "~/.dotnet/tools/pwsh")
-
+(add-hook 'powershell-mode-hook #'lsp)
 
 ;;;; +++centaur-tabs+++
 (use-package centaur-tabs
