@@ -156,6 +156,12 @@
 (setq lsp-pwsh-exe "~/.dotnet/tools/pwsh")
 (add-hook 'powershell-mode-hook #'lsp)
 
+;;;; +++go+++
+;; Add go/bin to emacs exec-path.
+;; This fixes gopls path not found error when gopls is actually
+;; installed and working from terminal but not from emacs.
+(setq exec-path (append exec-path '("~/go/bin")))
+
 ;;;; +++centaur-tabs+++
 (use-package centaur-tabs
   :config
