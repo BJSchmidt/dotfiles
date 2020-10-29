@@ -116,6 +116,12 @@
     (newline)
     (insert "#+end_src")))
 
+;;;; Deft
+;;;; Full Text search of files in folders
+(setq deft-recursive t)
+(setq deft-use-filter-string-for-filename t)
+(setq deft-extensions '("org" "md" "ps1"))
+(setq deft-directory "~/zettels/")
 
 ;;;; Powershell
 ;; PWSH Path in Ubuntu should normally be /usr/bin/pwsh
