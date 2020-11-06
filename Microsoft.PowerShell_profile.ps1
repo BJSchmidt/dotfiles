@@ -2,5 +2,7 @@
 Import-Module posh-git
 
 # Aliases
-Set-Alias -Name Code -Value Code-Insiders.cmd
+Set-Alias -Name Code -Value code.cmd
+Set-Alias -Name sudo -Value gsudo
+Set-Alias -Name su -Value gsudo
 
