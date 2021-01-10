@@ -81,6 +81,9 @@
 (setq org-roam-link-title-format "ƶ:%s")
 ;;(add-hook 'org-roam-backlinks-mode-hook (lambda () (flyspell-mode -1))) ; disable flyspell in org-roam-backlinks buffers
 
+;; Deft
+(setq deft-directory org-roam-directory)
+
 ;;;; +++ Org Transclude files+++
 ;; https://stackoverflow.com/questions/15328515/iso-transclusion-in-emacs-org-mode
 ;; auto-populate with C-c C-x C-u.
@@ -117,6 +120,12 @@
     (insert "#+end_src")))
 
 
+;;;; Nov.el
+(use-package! nov
+ ;; :mode ("\\.epub\\'" . nov-mode)
+  :config
+  (setq nov-save-place-file (concat doom-cache-dir "nov-places")))
+  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
 ;;;; Powershell
 ;; PWSH Path in Ubuntu should normally be /usr/bin/pwsh
 ;; However pwsh has not yet been published for Ubuntu 20.04:
