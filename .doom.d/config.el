@@ -116,7 +116,16 @@
     (newline)
     (insert "#+end_src")))
 
-
+;;;; DEFT - Full Text Search for Org-Roam
+ (use-package deft
+  :after org
+  :bind
+  ("C-c n d" . deft)
+  :custom
+  (deft-recursive t)
+  (deft-use-filter-string-for-filename t)
+  (deft-default-extension "org")
+  (deft-directory org-roam-directory))
 ;;;; Powershell
 ;; PWSH Path in Ubuntu should normally be /usr/bin/pwsh
 ;; However pwsh has not yet been published for Ubuntu 20.04:
