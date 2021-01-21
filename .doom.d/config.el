@@ -81,6 +81,9 @@
 (setq org-roam-link-title-format "ƶ:%s")
 ;;(add-hook 'org-roam-backlinks-mode-hook (lambda () (flyspell-mode -1))) ; disable flyspell in org-roam-backlinks buffers
 
+;; Deft
+(setq deft-directory org-roam-directory)
+
 ;;;; +++ Org Transclude files+++
 ;; https://stackoverflow.com/questions/15328515/iso-transclusion-in-emacs-org-mode
 ;; auto-populate with C-c C-x C-u.
@@ -116,16 +119,20 @@
     (newline)
     (insert "#+end_src")))
 
-;;;; DEFT - Full Text Search for Org-Roam
- (use-package deft
-  :after org
-  :bind
-  ("C-c n d" . deft)
-  :custom
-  (deft-recursive t)
-  (deft-use-filter-string-for-filename t)
-  (deft-default-extension "org")
-  (deft-directory org-roam-directory))
+;;;; Deft
+;;;; Full Text search of files in folders
+(setq deft-recursive t)
+(setq deft-use-filter-string-for-filename t)
+(setq deft-extensions '("org" "md" "ps1"))
+(setq deft-directory "~/zettels/")
+
+;;;; Nov.el
+(use-package! nov
+ ;; :mode ("\\.epub\\'" . nov-mode)
+  :config
+  (setq nov-save-place-file (concat doom-cache-dir "nov-places")))
+  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+>>>>>>> 79c7edcf72becd4b41908f149ee0eebf78863ea5
 ;;;; Powershell
 ;; PWSH Path in Ubuntu should normally be /usr/bin/pwsh
 ;; However pwsh has not yet been published for Ubuntu 20.04:
@@ -164,6 +171,12 @@
 ;;
 (setq lsp-pwsh-exe "~/.dotnet/tools/pwsh")
 (add-hook 'powershell-mode-hook #'lsp)
+
+;;;; +++go+++
+;; Add go/bin to emacs exec-path.
+;; This fixes gopls path not found error when gopls is actually
+;; installed and working from terminal but not from emacs.
+(setq exec-path (append exec-path '("~/go/bin")))
 
 ;;;; +++centaur-tabs+++
 (use-package centaur-tabs

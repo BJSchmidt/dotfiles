@@ -6,9 +6,8 @@
 ;; use 'M-x doom/reload'.
 
 (package! powershell)
-(package! org-noter)
 (package! evil-snipe)
-
+(package! nov)
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
 ;(package! some-package)
 

@@ -116,7 +116,11 @@ if ! shopt -oq posix; then
   fi
 fi
 
-export PATH=~/.emacs.d/bin:$PATH
+export PATH=$PATH:~/.emacs.d/bin
+export PATH=$PATH:/snap/bin/flutter
+export PATH=$PATH:~/go/bin
+
+export GO111MODULE=on
 
 # Test for WSL and configure accordingly:
 if uname -a | grep Microsoft > /dev/null; then
