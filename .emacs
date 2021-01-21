@@ -1,52 +1,230 @@
-;;;; Ben Schmidt's .emacs config
+;;;; .eamcs --- Ben Schmidt's .emacs config
 ;; 12/4/2019
+;; See https://github.com/daviwil/emacs-from-scratch
+;; and the livestreams from System Builders at https://www.youtube.com/watch?v=74zOY-vgkyw&list=PLEoMzSkcN8oPH1au7H6B7bBJ4ZO7BXjSZ
 
-;;;; straight.el: next-generation, purely functional package manager for the Emacs hacker.
-;; replaces the Melpa config & package.el (use-package package) and (package-initialize) above.
-;; https://github.com/raxod502/straight.el
-;; straight.el bootstrap code:
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 5))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-;; Set use-package to install missing packages using straight.el:
-(setq straight-use-package-by-default t)
+;; You will most likely need to adjust this font size for your system!
+(defvar efs/default-font-size 180)
+(defvar efs/default-variable-font-size 180)
 
-;;;; Install use-package with Straight:
-(straight-use-package 'use-package)
+;; Make frame transparency overridable
+(defvar efs/frame-transparency '(90 . 90))
+
+;; Initialize package sources
+(require 'package)
+
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("org" . "https://orgmode.org/elpa/")
+                         ("elpa" . "https://elpa.gnu.org/packages/")))
+
+(package-initialize)
+(unless package-archive-contents
+  (package-refresh-contents))
+
+  ;; Initialize use-package on non-Linux platforms
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+
 (require 'use-package)
-;; Now that straight and use-package are loaded we can install & load packages like:
-;; (use-package foo)
-;; See: https://github.com/jwiegley/use-package#package-installation
-;; We can set keybindings & variables inside the package declaration like this:
-;; (use-package ace-jump-mode
-;;   :bind ("C-." . ace-jump-mode)
-;;   :init (setq var-foo t))
-;; Because the variable var-foo is set in the :init block, it is set before the package loads.
+(setq use-package-always-ensure t)
+
+
+;;;; General Settings
+;; Make ESC quit prompts
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
+;; Visual Settings
+(scroll-bar-mode -1)        ; Disable visible scrollbar
+(tool-bar-mode -1)          ; Disable the toolbar
+(tooltip-mode -1)           ; Disable tooltips
+(set-fringe-mode 10)        ; Give some breathing room
+(menu-bar-mode -1)          ; Disable the menu bar
+(setq visible-bell t)       ; Enable Visible Bell
+(column-number-mode)        ; Enable Column Numbers in the modeline
+;; Line Numbers
+(global-display-line-numbers-mode t) ; Enable Display Line Numbers globally
+;; Disable line numbers for some modes
+(dolist (mode '(term-mode-hook
+                shell-mode-hook
+                treemacs-mode-hook
+                eshell-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+;; Set frame transparency
+(set-frame-parameter (selected-frame) 'alpha efs/frame-transparency)
+(add-to-list 'default-frame-alist `(alpha . ,efs/frame-transparency))
+(set-frame-parameter (selected-frame) 'fullscreen 'maximized)
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+;; Fonts
+(set-face-attribute 'default nil :font "Fira Code Retina" :height efs/default-font-size)
+;; Set the fixed pitch face
+(set-face-attribute 'fixed-pitch nil :font "Fira Code Retina" :height efs/default-font-size)
+;; Set the variable pitch face
+(set-face-attribute 'variable-pitch nil :font "Cantarell" :height efs/default-variable-font-size :weight 'regular)
+
+;;Theme
+(use-package doom-themes
+  :init (load-theme 'doom-dark+ t))
+
+(use-package all-the-icons)
+
+(use-package doom-modeline
+  :init (doom-modeline-mode 1)
+  :custom ((doom-modeline-height 15)))
 
 ;;;; Packages:
+;; Use general to define your own leader key & menu (a la spacemacs or doom emacs)
+;; Note efs/leader-keys is added onto later with a hydra for text scaling.
+(use-package general
+  :config
+  (general-create-definer efs/leader-keys
+    :keymaps '(normal insert visual emacs)
+    :prefix "SPC"
+    :global-prefix "C-SPC")
+
+  (efs/leader-keys
+    "t"  '(:ignore t :which-key "toggles")
+    "tt" '(counsel-load-theme :which-key "choose theme")))
+
+;;;;Evil Mode
+(use-package evil
+  :init
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
+  (setq evil-want-C-u-scroll t)
+  (setq evil-want-C-d-scroll t)
+  ;(setq evil-want-C-i-jump nil)
+  :config
+  (evil-mode 1)
+  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+
+  ;; Use visual line motions even outside of visual-line-mode buffers
+  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+
+  (evil-set-initial-state 'messages-buffer-mode 'normal)
+  (evil-set-initial-state 'dashboard-mode 'normal))
+
+(use-package evil-collection
+  :after evil
+  :config
+  (evil-collection-init))
+
 (use-package which-key
-  :init (setq which-key-idle-delay 0.001))
-(which-key-mode 1)
+  :init (which-key-mode)
+  :diminish which-key-mode
+  :config (setq which-key-idle-delay 0.001))
+
+(use-package ivy
+  :diminish
+  :bind (("C-s" . swiper)
+         :map ivy-minibuffer-map
+         ("TAB" . ivy-alt-done)
+         ("C-l" . ivy-alt-done)
+         ("C-j" . ivy-next-line)
+         ("C-k" . ivy-previous-line)
+         :map ivy-switch-buffer-map
+         ("C-k" . ivy-previous-line)
+         ("C-l" . ivy-done)
+         ("C-d" . ivy-switch-buffer-kill)
+         :map ivy-reverse-i-search-map
+         ("C-k" . ivy-previous-line)
+         ("C-d" . ivy-reverse-i-search-kill))
+  :config
+  (ivy-mode 1))
+
+(use-package counsel
+  :bind (("C-M-j" . 'counsel-switch-buffer)
+         :map minibuffer-local-map
+         ("C-r" . 'counsel-minibuffer-history))
+  :custom
+  (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only)
+  :config
+  (counsel-mode 1))
+
+(use-package ivy-rich
+  :init
+  (ivy-rich-mode 1))
+
+(use-package ivy-prescient
+  :after counsel
+  :custom
+  (ivy-prescient-enable-filtering nil)
+  :config
+  ;; Uncomment the following line to have sorting remembered across sessions!
+  (prescient-persist-mode 1)
+  (ivy-prescient-mode 1))
+
+(use-package helpful
+  :custom
+  (counsel-describe-function-function #'helpful-callable)
+  (counsel-describe-variable-function #'helpful-variable)
+  :bind
+  ([remap describe-function] . counsel-describe-function)
+  ([remap describe-command] . helpful-command)
+  ([remap describe-variable] . counsel-describe-variable)
+  ([remap describe-key] . helpful-key))
+
+(use-package hydra)
+(defhydra hydra-text-scale (:timeout 4)
+  "scale text"
+  ("j" text-scale-increase "in")
+  ("k" text-scale-decrease "out")
+  ("f" nil "finished" :exit t))
+
+(efs/leader-keys
+  "ts" '(hydra-text-scale/body :which-key "scale text"))
 
 ;;; Org Mode:
-(use-package org
-  :bind (("C-c l" . org-store-link)
-	 ("C-c C-l" . org-insert-link)))
+(defun efs/org-font-setup ()
+  ;; Replace list hyphen with dot
+  (font-lock-add-keywords 'org-mode
+                          '(("^ *\\([-]\\) "
+                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
-(add-hook 'org-mode-hook #'custom-org-hook) ;https://emacs.stackexchange.com/questions/5358/proper-way-to-enable-minor-mode
-(defun custom-org-hook ()
-  (org-indent-mode 1)
-  (visual-line-mode 1)
-  )
+  ;; Set faces for heading levels
+  (dolist (face '((org-level-1 . 1.2)
+                  (org-level-2 . 1.1)
+                  (org-level-3 . 1.05)
+                  (org-level-4 . 1.0)
+                  (org-level-5 . 1.1)
+                  (org-level-6 . 1.1)
+                  (org-level-7 . 1.1)
+                  (org-level-8 . 1.1)))
+    (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
+
+  ;; Ensure that anything that should be fixed-pitch in Org files appears that way
+  (set-face-attribute 'org-block nil    :foreground nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-table nil    :inherit 'fixed-pitch)
+  (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch)
+  (set-face-attribute 'org-code nil     :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-table nil    :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-checkbox nil  :inherit 'fixed-pitch))
+
+(defun efs/org-mode-setup ()
+  (org-indent-mode)
+  (variable-pitch-mode 1)
+  (visual-line-mode 1))
+
+(use-package org
+  :hook (org-mode . efs/org-mode-setup)
+  :bind (("C-c l" . org-store-link)
+         ("C-c C-l" . org-insert-link))
+  :config
+  (setq org-ellipsis " ▾")
+  (setq org-agenda-start-with-log-mode t)
+  (setq org-log-done 'time)
+  (setq org-log-into-drawer t)
+
+  ;; Save Org buffers after refiling!
+  (advice-add 'org-refile :after 'org-save-all-org-buffers)
+
+  (efs/org-font-setup))
 
 ;; Org Agenda & Clock:
 (setq org-agenda-files (directory-files-recursively "~/zettels/" "^[^.#]+.org$"))
@@ -57,34 +235,33 @@
 (setq org-return-follows-link t) ;; Use return on a link in an editable buffer will follow the link instead of inserting a new line.
 
 (use-package org-bullets
-  :hook (org-mode . org-bullets-mode))
+  :after org
+  :hook (org-mode . org-bullets-mode)
+  :custom (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
 ;; https://github.com/sabof/org-bullets
 ;; (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 ;; (setq org-bullets-bullet-list '("◉" "⁑" "⁂" "❖" "✮" "✱" "✸")))
 ;; (setq org-bullets-bullet-list '("◉" "⁑" "⁂" "❖" "✮" "✱" "✸")))
 
-(use-package org-roam
-      :after org
-      :hook 
-      (after-init . org-roam-mode)
-      :straight (:host github :repo "jethrokuan/org-roam" :branch "develop")
-      :custom ((org-roam-directory "~/zettels/"))
-      :bind (:map org-roam-mode-map
-              (("C-c n l" . org-roam)
-               ("C-c n f" . org-roam-find-file)
-               ("C-c n g" . org-roam-show-graph)
-	       ("C-c n t" . org-roam-today))
-              :map org-mode-map
-              (("C-c n i" . org-roam-insert))))
-(setq org-roam-buffer-width 0.2)
-(setq org-roam-link-title-format "ƶ:%s")
-(add-hook 'org-roam-backlinks-mode-hook (lambda () (flyspell-mode -1))) ; disable flyspell in org-roam-backlinks buffers
+;; (use-package org-roam
+;;       :after org
+;;       :hook
+;;       (after-init . org-roam-mode)
+;;       :straight (:host github :repo "jethrokuan/org-roam" :branch "develop")
+;;       :custom ((org-roam-directory "~/zettels/"))
+;;       :bind (:map org-roam-mode-map
+;;               (("C-c n l" . org-roam)
+;;                ("C-c n f" . org-roam-find-file)
+;;                ("C-c n g" . org-roam-show-graph)
+;; 	       ("C-c n t" . org-roam-today))
+;;               :map org-mode-map
+;;               (("C-c n i" . org-roam-insert))))
+;; (setq org-roam-buffer-width 0.2)
+;; (setq org-roam-link-title-format "ƶ:%s")
+;; (add-hook 'org-roam-backlinks-mode-hook (lambda () (flyspell-mode -1))) ; disable flyspell in org-roam-backlinks buffers
 
-(use-package org-noter)
+;; (use-package org-noter)
 
-
-
-(use-package neotree)
 
 (use-package magit
   :custom
@@ -100,15 +277,11 @@
   (deft-directory org-roam-directory))
 
 (use-package helm
-  :straight (:host github :repo "emacs-helm/helm" :branch "master")
   :bind (("M-x" . helm-M-x)
 	 ("C-x r b" . helm-filtered-bookmarks)
 	 ("C-x C-f" . helm-find-files)
 	 )
   )
-;;(global-set-key (kbd "M-x") #'helm-M-x)
-;;(global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
-;;(global-set-key (kbd "C-x C-f") #'helm-find-files)
 (helm-mode 1)
 ;;(use-package helm-projectile)
 
@@ -122,11 +295,10 @@
 
 ;;;; Configuration:
 ;; Themes:
-(use-package vscode-dark-plus-theme
-  :straight (:host github :repo "ianpan870102/vscode-dark-plus-emacs-theme")
-  :custom
-  (add-to-list 'custom-theme-load-path "~/.emacs.d/straight/repos/vscode-dark-plus-emacs-theme/")
-  (load-theme 'vscode-dark-plus t))
+;; (use-package vscode-dark-plus-theme
+;;   :custom
+;;   (add-to-list 'custom-theme-load-path "~/.emacs.d/straight/repos/vscode-dark-plus-emacs-theme/")
+;;   (load-theme 'vscode-dark-plus t))
 
 ;; Change all prompts to y or n
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -184,74 +356,3 @@
     (yank)
     (newline)
     (insert "#+end_src")))
-
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(add-to-list (quote custom-theme-load-path) t)
- '(ansi-color-names-vector
-   ["#282a36" "#ff5555" "#50fa7b" "#f1fa8c" "#61bfff" "#ff79c6" "#8be9fd" "#f8f8f2"])
- '(custom-enabled-themes (quote (vscode-dark-plus-GrayBackground)))
- '(custom-safe-themes
-   (quote
-    ("55cf8d1507ce65a9c84cafd25c901faa94f6cc958e7dd5b345ab6efedfeed0e2" "7e88785f415a689c11610ec8e940d3e994eb25a9973474f7894fd5ae234ce18a" "15da14568df794266cd571db282a5776fc07065c661224225d309b389a26731a" "3082bb04a78ecf18f20f8220fb67aba8a02b43c289f48d72e530250e55e335a2" "ca849ae0c889eb918785cdc75452b1e11a00848a5128a95a23872e0119ccc8f4" default)))
- '(deft-default-extension "org" t)
- '(deft-directory "~/zettels/")
- '(deft-recursive t)
- '(deft-use-filter-string-for-filename t)
- '(fci-rule-color "#6272a4")
- '(global-set-key "g" t)
- '(helm-completion-style (quote emacs))
- '(jdee-db-active-breakpoint-face-colors (cons "#1E2029" "#bd93f9"))
- '(jdee-db-requested-breakpoint-face-colors (cons "#1E2029" "#50fa7b"))
- '(jdee-db-spec-breakpoint-face-colors (cons "#1E2029" "#565761"))
- '(load-theme (quote vscode-dark-plus) t)
- '(menu-bar-mode nil)
- '(objed-cursor-color "#ff5555")
- '(org-roam-directory "~/zettels/")
- '(org-roam-mode t nil (org-roam))
- '(package-selected-packages
-   (quote
-    (undo-tree doom-themes powershell magit org-bullets which-key)))
- '(pdf-view-midnight-colors (cons "#f8f8f2" "#282a36"))
- '(tool-bar-mode nil)
- '(uniquify-buffer-name-style (quote forward) nil (uniquify))
- '(user-full-name "Ben Schmidt")
- '(user-mail-address "benschmidt@benschmidt.tech")
- '(vc-annotate-background "#282a36")
- '(vc-annotate-color-map
-   (list
-    (cons 20 "#50fa7b")
-    (cons 40 "#85fa80")
-    (cons 60 "#bbf986")
-    (cons 80 "#f1fa8c")
-    (cons 100 "#f5e381")
-    (cons 120 "#face76")
-    (cons 140 "#ffb86c")
-    (cons 160 "#ffa38a")
-    (cons 180 "#ff8ea8")
-    (cons 200 "#ff79c6")
-    (cons 220 "#ff6da0")
-    (cons 240 "#ff617a")
-    (cons 260 "#ff5555")
-    (cons 280 "#d45558")
-    (cons 300 "#aa565a")
-    (cons 320 "#80565d")
-    (cons 340 "#6272a4")
-    (cons 360 "#6272a4")))
- '(vc-annotate-very-old-color nil))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 100 :width normal :foundry "PfEd" :family "DejaVu Sans Mono"))))
- '(org-level-1 ((t (:inherit outline-1 :box nil :height 1.35))))
- '(org-level-2 ((t (:inherit outline-2 :box nil :height 1.25))))
- '(org-level-3 ((t (:inherit outline-3 :box nil :height 1.15))))
- '(org-level-4 ((t (:inherit outline-4 :box nil :height 1.1)))))
-(put 'upcase-region 'disabled nil)
-(put 'downcase-region 'disabled nil)
