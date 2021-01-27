@@ -1,11 +1,6 @@
-;;;; .eamcs --- Ben Schmidt's .emacs config
-;; 12/4/2019
-;; See https://github.com/daviwil/emacs-from-scratch
-;; and the livestreams from System Builders at https://www.youtube.com/watch?v=74zOY-vgkyw&list=PLEoMzSkcN8oPH1au7H6B7bBJ4ZO7BXjSZ
-
 ;; You will most likely need to adjust this font size for your system!
-(defvar efs/default-font-size 180)
-(defvar efs/default-variable-font-size 180)
+(defvar efs/default-font-size 120)
+(defvar efs/default-variable-font-size 120)
 
 ;; Make frame transparency overridable
 (defvar efs/frame-transparency '(90 . 90))
@@ -28,10 +23,7 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-
-;;;; General Settings
-;; Make ESC quit prompts
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+(setq inhibit-startup-message t)
 
 ;; Visual Settings
 (scroll-bar-mode -1)        ; Disable visible scrollbar
@@ -41,10 +33,11 @@
 (menu-bar-mode -1)          ; Disable the menu bar
 (setq visible-bell t)       ; Enable Visible Bell
 (column-number-mode)        ; Enable Column Numbers in the modeline
+
 ;; Line Numbers
-(global-display-line-numbers-mode t) ; Enable Display Line Numbers globally
-;; Disable line numbers for some modes
-(dolist (mode '(term-mode-hook
+(setq display-line-numbers-type 'relative) ; Display Relative Line Numbers
+(global-display-line-numbers-mode t)       ; Enable Display Line Numbers globally
+(dolist (mode '(term-mode-hook             ; Disable line numbers for some modes
                 shell-mode-hook
                 treemacs-mode-hook
                 eshell-mode-hook))
@@ -56,6 +49,9 @@
 (set-frame-parameter (selected-frame) 'fullscreen 'maximized)
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
+;; Change all prompts to y or n
+(defalias 'yes-or-no-p 'y-or-n-p)
+
 ;; Fonts
 (set-face-attribute 'default nil :font "Fira Code Retina" :height efs/default-font-size)
 ;; Set the fixed pitch face
@@ -65,7 +61,7 @@
 
 ;;Theme
 (use-package doom-themes
-  :init (load-theme 'doom-dark+ t))
+  :init (load-theme 'doom-one t))
 
 (use-package all-the-icons)
 
@@ -73,19 +69,60 @@
   :init (doom-modeline-mode 1)
   :custom ((doom-modeline-height 15)))
 
-;;;; Packages:
-;; Use general to define your own leader key & menu (a la spacemacs or doom emacs)
-;; Note efs/leader-keys is added onto later with a hydra for text scaling.
-(use-package general
-  :config
-  (general-create-definer efs/leader-keys
-    :keymaps '(normal insert visual emacs)
-    :prefix "SPC"
-    :global-prefix "C-SPC")
+(use-package which-key
+  :init (which-key-mode)
+  :diminish which-key-mode
+  :config (setq which-key-idle-delay 0.001))    ; I previously read somewhere that this shouldn't be set to 0, but instead some very short number to prevent some issue.
 
-  (efs/leader-keys
-    "t"  '(:ignore t :which-key "toggles")
-    "tt" '(counsel-load-theme :which-key "choose theme")))
+(use-package ivy
+  :diminish
+  :bind (("C-s" . swiper)
+         :map ivy-minibuffer-map
+         ("TAB" . ivy-alt-done)
+         ("C-l" . ivy-alt-done)
+         ("C-j" . ivy-next-line)
+         ("C-k" . ivy-previous-line)
+         :map ivy-switch-buffer-map
+         ("C-k" . ivy-previous-line)
+         ("C-l" . ivy-done)
+         ("C-d" . ivy-switch-buffer-kill)
+         :map ivy-reverse-i-search-map
+         ("C-k" . ivy-previous-line)
+         ("C-d" . ivy-reverse-i-search-kill))
+  :config
+  (ivy-mode 1))
+
+(use-package ivy-rich
+  :init
+  (ivy-rich-mode 1))
+
+(use-package counsel
+  :bind (("C-M-j" . 'counsel-switch-buffer)
+         :map minibuffer-local-map
+         ("C-r" . 'counsel-minibuffer-history))
+  :custom
+  (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only)
+  :config
+  (counsel-mode 1))
+
+(use-package ivy-prescient
+  :after counsel
+  :custom
+  (ivy-prescient-enable-filtering nil)
+  :config
+  ;; Uncomment the following line to have sorting remembered across sessions!
+  (prescient-persist-mode 1)
+  (ivy-prescient-mode 1))
+
+(use-package helpful
+  :custom
+  (counsel-describe-function-function #'helpful-callable)
+  (counsel-describe-variable-function #'helpful-variable)
+  :bind
+  ([remap describe-function] . counsel-describe-function)
+  ([remap describe-command] . helpful-command)
+  ([remap describe-variable] . counsel-describe-variable)
+  ([remap describe-key] . helpful-key))
 
 ;;;;Evil Mode
 (use-package evil
@@ -112,60 +149,21 @@
   :config
   (evil-collection-init))
 
-(use-package which-key
-  :init (which-key-mode)
-  :diminish which-key-mode
-  :config (setq which-key-idle-delay 0.001))
+;; Make ESC quit prompts
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
-(use-package ivy
-  :diminish
-  :bind (("C-s" . swiper)
-         :map ivy-minibuffer-map
-         ("TAB" . ivy-alt-done)
-         ("C-l" . ivy-alt-done)
-         ("C-j" . ivy-next-line)
-         ("C-k" . ivy-previous-line)
-         :map ivy-switch-buffer-map
-         ("C-k" . ivy-previous-line)
-         ("C-l" . ivy-done)
-         ("C-d" . ivy-switch-buffer-kill)
-         :map ivy-reverse-i-search-map
-         ("C-k" . ivy-previous-line)
-         ("C-d" . ivy-reverse-i-search-kill))
+;; Use general to define your own leader key & menu (a la spacemacs or doom emacs)
+;; Note efs/leader-keys is added onto later with a hydra for text scaling.
+(use-package general
   :config
-  (ivy-mode 1))
+  (general-create-definer efs/leader-keys
+    :keymaps '(normal insert visual emacs)
+    :prefix "SPC"
+    :global-prefix "C-SPC")
 
-(use-package counsel
-  :bind (("C-M-j" . 'counsel-switch-buffer)
-         :map minibuffer-local-map
-         ("C-r" . 'counsel-minibuffer-history))
-  :custom
-  (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only)
-  :config
-  (counsel-mode 1))
-
-(use-package ivy-rich
-  :init
-  (ivy-rich-mode 1))
-
-(use-package ivy-prescient
-  :after counsel
-  :custom
-  (ivy-prescient-enable-filtering nil)
-  :config
-  ;; Uncomment the following line to have sorting remembered across sessions!
-  (prescient-persist-mode 1)
-  (ivy-prescient-mode 1))
-
-(use-package helpful
-  :custom
-  (counsel-describe-function-function #'helpful-callable)
-  (counsel-describe-variable-function #'helpful-variable)
-  :bind
-  ([remap describe-function] . counsel-describe-function)
-  ([remap describe-command] . helpful-command)
-  ([remap describe-variable] . counsel-describe-variable)
-  ([remap describe-key] . helpful-key))
+  (efs/leader-keys
+    "t"  '(:ignore t :which-key "toggles")
+    "tt" '(counsel-load-theme :which-key "choose theme")))
 
 (use-package hydra)
 (defhydra hydra-text-scale (:timeout 4)
@@ -205,6 +203,7 @@
   (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
   (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
   (set-face-attribute 'org-checkbox nil  :inherit 'fixed-pitch))
+  (set-face-attribute 'line-number nil :inherit 'fixed-pitch)
 
 (defun efs/org-mode-setup ()
   (org-indent-mode)
@@ -216,7 +215,21 @@
   :bind (("C-c l" . org-store-link)
          ("C-c C-l" . org-insert-link))
   :config
-  (setq org-ellipsis " ▾")
+  ;(setq org-ellipsis " ▾")
+  (setq org-ellipsis " ➤")
+  ;(setq org-ellipsis " ➢")
+  ;(setq org-ellipsis " ➣")
+  ;(setq org-ellipsis " ᐅ")
+  ;(setq org-ellipsis " ᐳ")
+  ;(setq org-ellipsis " >")
+ ; 
+  ;(setq org-ellipsis " »")
+  ;(setq org-ellipsis " ›")
+  ;(setq org-ellipsis " ❯")
+  ;(setq org-ellipsis " ❱")
+  ;(setq org-ellipsis " ⇁")
+  ;(setq org-ellipsis " ⇀")
+
   (setq org-agenda-start-with-log-mode t)
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
@@ -230,6 +243,7 @@
 (setq org-agenda-files (directory-files-recursively "~/zettels/" "^[^.#]+.org$"))
 (setq org-agenda-skip-deadline-prewarning-if-scheduled t )
 (setq org-log-note-clock-out t) ;; Prompt for a note when clocking out.
+
 ;; Org Fontify code in code blocks:
 (setq org-src-fontify-natively t)
 (setq org-return-follows-link t) ;; Use return on a link in an editable buffer will follow the link instead of inserting a new line.
@@ -237,35 +251,137 @@
 (use-package org-bullets
   :after org
   :hook (org-mode . org-bullets-mode)
-  :custom (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
-;; https://github.com/sabof/org-bullets
-;; (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-;; (setq org-bullets-bullet-list '("◉" "⁑" "⁂" "❖" "✮" "✱" "✸")))
-;; (setq org-bullets-bullet-list '("◉" "⁑" "⁂" "❖" "✮" "✱" "✸")))
+  :custom (org-bullets-bullet-list '("\u200b")))
+  ; Some other org bullet candidates:
+  ; org-bullets-bullet-list '("●" "◉" "○")
+    ;; Set Bullets to a zero width space:
+    ; (setq org-bullets-bullet-list '("\u200b"))
+    ; https://zhangda.wordpress.com/2016/02/15/configurations-for-beautifying-emacs-org-mode/
 
-;; (use-package org-roam
-;;       :after org
-;;       :hook
-;;       (after-init . org-roam-mode)
-;;       :straight (:host github :repo "jethrokuan/org-roam" :branch "develop")
-;;       :custom ((org-roam-directory "~/zettels/"))
-;;       :bind (:map org-roam-mode-map
-;;               (("C-c n l" . org-roam)
-;;                ("C-c n f" . org-roam-find-file)
-;;                ("C-c n g" . org-roam-show-graph)
-;; 	       ("C-c n t" . org-roam-today))
-;;               :map org-mode-map
-;;               (("C-c n i" . org-roam-insert))))
-;; (setq org-roam-buffer-width 0.2)
-;; (setq org-roam-link-title-format "ƶ:%s")
-;; (add-hook 'org-roam-backlinks-mode-hook (lambda () (flyspell-mode -1))) ; disable flyspell in org-roam-backlinks buffers
+(use-package org-roam
+      :after org
+      :hook
+      (after-init . org-roam-mode)
+      ; :straight (:host github :repo "jethrokuan/org-roam" :branch "develop")
+      :custom ((org-roam-directory "~/zettels/"))
+      :bind (:map org-roam-mode-map
+              (("C-c n l" . org-roam)
+               ("C-c n f" . org-roam-find-file)
+               ("C-c n g" . org-roam-show-graph)
+	       ("C-c n t" . org-roam-today))
+              :map org-mode-map
+              (("C-c n i" . org-roam-insert))))
+(setq org-roam-buffer-width 0.2)
+(setq org-roam-link-title-format "ƶ:%s")
+(add-hook 'org-roam-backlinks-mode-hook (lambda () (flyspell-mode -1))) ; disable flyspell in org-roam-backlinks buffers
 
-;; (use-package org-noter)
+(use-package org-noter)
 
+(org-babel-do-load-languages
+  'org-babel-load-languages
+  '((emacs-lisp . t)))
+
+
+(push '("conf-unix" . conf-unix) org-src-lang-modes)
+
+;; This is needed as of Org 9.2
+(require 'org-tempo)
+
+(add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+(add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+(add-to-list 'org-structure-template-alist '("ps" . "src powershell"))
+
+;; Automatically tangle our Emacs.org config file when we save it
+  ;;(defun efs/org-babel-tangle-config ()
+    ;;(when (string-equal (file-name-directory (buffer-file-name))
+                        ;;(expand-file-name user-emacs-directory))
+      ;;;; Dynamic scoping to the rescue
+      ;;(let ((org-confirm-babel-evaluate nil))
+        ;;(org-babel-tangle))))
+;;
+  ;;(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
+
+(defun efs/lsp-mode-setup ()
+  (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
+  (lsp-headerline-breadcrumb-mode))
+
+(use-package lsp-mode
+  :commands (lsp lsp-deferred)
+  :hook (lsp-mode . efs/lsp-mode-setup)
+  :init
+  (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
+  :config
+  (lsp-enable-which-key-integration t))
+
+(use-package lsp-ui
+  :hook (lsp-mode . lsp-ui-mode)
+  :custom
+  (lsp-ui-doc-position 'bottom))
+
+(use-package lsp-treemacs
+  :after lsp)
+
+(use-package lsp-ivy)
+
+(use-package powershell)
+
+(use-package company
+  :after lsp-mode
+  :hook (lsp-mode . company-mode)
+  :bind (:map company-active-map
+         ("<tab>" . company-complete-selection))
+        (:map lsp-mode-map
+         ("<tab>" . company-indent-or-complete-common))
+  :custom
+  (company-minimum-prefix-length 1)
+  (company-idle-delay 0.0))
+
+(use-package company-box
+  :hook (company-mode . company-box-mode))
 
 (use-package magit
   :custom
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
   (global-set-key (kbd "C-x g") 'magit-status))
+
+;; NOTE: Make sure to configure a GitHub token before using this package!
+;; - https://magit.vc/manual/forge/Token-Creation.html#Token-Creation
+;; - https://magit.vc/manual/ghub/Getting-Started.html#Getting-Started
+(use-package forge)
+
+(use-package evil-nerd-commenter
+  :bind ("M-/" . evilnc-comment-or-uncomment-lines))
+
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+(use-package dired
+  :ensure nil
+  :commands (dired dired-jump)
+  :bind (("C-x C-j" . dired-jump))
+  :custom ((dired-listing-switches "-agho --group-directories-first"))
+  :config
+  (evil-collection-define-key 'normal 'dired-mode-map
+    "h" 'dired-single-up-directory
+    "l" 'dired-single-buffer))
+
+(use-package dired-single)
+
+(use-package all-the-icons-dired
+  :hook (dired-mode . all-the-icons-dired-mode))
+
+(use-package dired-open
+  :config
+  ;; Doesn't work as expected!
+  ;;(add-to-list 'dired-open-functions #'dired-open-xdg t)
+  (setq dired-open-extensions '(("png" . "feh")
+                                ("mkv" . "mpv"))))
+
+(use-package dired-hide-dotfiles
+  :hook (dired-mode . dired-hide-dotfiles-mode)
+  :config
+  (evil-collection-define-key 'normal 'dired-mode-map
+    "H" 'dired-hide-dotfiles-mode))
 
 (use-package deft
   :after org
@@ -275,33 +391,6 @@
   (deft-use-filter-string-for-filename t)
   (deft-default-extension "org")
   (deft-directory org-roam-directory))
-
-(use-package helm
-  :bind (("M-x" . helm-M-x)
-	 ("C-x r b" . helm-filtered-bookmarks)
-	 ("C-x C-f" . helm-find-files)
-	 )
-  )
-(helm-mode 1)
-;;(use-package helm-projectile)
-
-(use-package powershell)
-
-(use-package pdf-tools) ; Requires some install external.
-; See: https://github.com/politza/pdf-tools
-
-;enable flyspell for all text mode buffers:
-(add-hook 'text-mode-hook 'flyspell-mode)
-
-;;;; Configuration:
-;; Themes:
-;; (use-package vscode-dark-plus-theme
-;;   :custom
-;;   (add-to-list 'custom-theme-load-path "~/.emacs.d/straight/repos/vscode-dark-plus-emacs-theme/")
-;;   (load-theme 'vscode-dark-plus t))
-
-;; Change all prompts to y or n
-(defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; WSL2 Specific configuration:
 (when (string-match "-[Mm]icrosoft" operating-system-release)
@@ -321,38 +410,3 @@
   ; (apply 'call-process "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe" nil
   (setq-default browse-url-browser-function 'my--browse-url)
 )
-
-;; Transclude files:
-;; https://stackoverflow.com/questions/15328515/iso-transclusion-in-emacs-org-mode
-;; auto-populate with C-c C-x C-u.
-;; Skip the min and max args to include the entire file.
-;; Note that you can bind org-update-all-dblocks to a hook, so that this range is updated whenever you visit the file or save.
-(defun org-dblock-write:transclusion (params)
-  (progn
-    (with-temp-buffer
-      (insert-file-contents (plist-get params :filename))
-      (let ((range-start (or (plist-get params :min) (line-number-at-pos (point-min))))
-            (range-end (or (plist-get params :max) (line-number-at-pos (point-max)))))
-        (copy-region-as-kill (line-beginning-position range-start)
-                             (line-end-position range-end))))
-    (yank)))
-
-;;Example:
-;;#+BEGIN: transclusion :filename "~/testfile.org" :min 2 :max 4
-;;#+END:
-
-;; transcludePS does the same thing as the transclusion dynamic block above, but wraps the transcluded content in a powershell src block:
-;; auto-populate with C-c C-x C-u.
-(defun org-dblock-write:transcludePS (params)
-  (progn
-    (insert "#+begin_src powershell")
-    (newline)
-    (with-temp-buffer
-      (insert-file-contents (plist-get params :filename))
-      (let ((range-start (or (plist-get params :min) (line-number-at-pos (point-min))))
-            (range-end (or (plist-get params :max) (line-number-at-pos (point-max)))))
-        (copy-region-as-kill (line-beginning-position range-start)
-                             (line-end-position range-end))))
-    (yank)
-    (newline)
-    (insert "#+end_src")))
