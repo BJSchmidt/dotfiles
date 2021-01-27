@@ -6,7 +6,7 @@ This is my configuration for emacs. It is loosely based on the [[https://github.
 * Background
 I have been using emacs since June of 2019, and have used a number of configurations: vanilla emacs, Spacemacs, a custom configuration, and most recently Doom emacs with Evil mode, which I used for the better part of 2020. I found Doom emacs discoverable enough that I was able to be comfortable and productive in it within just a day or two. I now find that while there is a lot to like about Doom emacs, I want a simpler configuration that I fully understand and can tweak easily.
 
-This configuration going to be primarily based on the wonderful work done by @daviwil: See https://github.com/daviwil/emacs-from-scratch and his System Builder's livestreams at https://www.youtube.com/watch?v=74zOY-vgkyw&list=PLEoMzSkcN8oPH1au7H6B7bBJ4ZO7BXjSZ
+This configuration is primarily based on the wonderful work done by @daviwil: See https://github.com/daviwil/emacs-from-scratch and his System Builder's livestreams at https://www.youtube.com/watch?v=74zOY-vgkyw&list=PLEoMzSkcN8oPH1au7H6B7bBJ4ZO7BXjSZ
 
 * Default Font Size
 #+begin_src emacs-lisp
