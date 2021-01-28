@@ -35,7 +35,8 @@
 (column-number-mode)        ; Enable Column Numbers in the modeline
 
 ;; Line Numbers
-(setq display-line-numbers-type 'relative) ; Display Relative Line Numbers
+(setq display-line-numbers-type 'visual) ; Display Relative Line Numbers
+(setq display-line-numbers-width-start t)
 (global-display-line-numbers-mode t)       ; Enable Display Line Numbers globally
 (dolist (mode '(term-mode-hook             ; Disable line numbers for some modes
                 shell-mode-hook
