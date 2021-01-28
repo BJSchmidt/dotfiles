@@ -164,7 +164,12 @@
 
   (efs/leader-keys
     "t"  '(:ignore t :which-key "toggles")
-    "tt" '(counsel-load-theme :which-key "choose theme")))
+    "tt" '(counsel-load-theme :which-key "choose theme")
+
+    "g"  '(:ignore t :which-key "Git")
+    "gg" '(magit-status :which-key "Magit Status")
+
+)
 
 (use-package hydra)
 (defhydra hydra-text-scale (:timeout 4)
