@@ -23,7 +23,7 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-(setq inhibit-startup-message t)
+;(setq inhibit-startup-message t)
 
 ;; Visual Settings
 (scroll-bar-mode -1)        ; Disable visible scrollbar
@@ -73,7 +73,7 @@
 (use-package which-key
   :init (which-key-mode)
   :diminish which-key-mode
-  :config (setq which-key-idle-delay 0.001))    ; I previously read somewhere that this shouldn't be set to 0, but instead some very short number to prevent some issue.
+  :config (setq which-key-idle-delay 0.0))    ; I previously read somewhere that this shouldn't be set to 0, but instead some very short number to prevent some issue.
 
 (use-package ivy
   :diminish
@@ -163,13 +163,40 @@
     :global-prefix "C-SPC")
 
   (efs/leader-keys
-    "t"  '(:ignore t :which-key "toggles")
+    "t"  '(:ignore t :which-key "Toggles")
     "tt" '(counsel-load-theme :which-key "choose theme")
 
     "g"  '(:ignore t :which-key "Git")
     "gg" '(magit-status :which-key "Magit Status")
 
+    "n" '(:ignore t :which-key "Notes")
+    "nf" '(org-roam-find-file :which-key "Org-Roam Find File")
+    "ni" '(org-roam-insert :which-key "Org-Roam Insert")
+    "nr" '(org-roam-buffer-toggle-display :which-key "Org-Roam Buffer")
+
+    "b" '(:ignore t :which-key "Buffers")
+    "bb" '(ivy-switch-buffer :which-key "Switch Buffer")
+    "bk" '(kill-this-buffer :which-key "Kill Buffer")
+    "bn" '(evil-new-buffer :which-key "New Buffer")
+
+    "f" '(:ignore t :which-key "Files")
+    ;; "ff" ;Find Files
+
+    "w" '(:ignore t :which-key "Windows")
+    ;; "ww" ;switch Window
+    ;; "wc" ;close window
+    ;; "wo" ;other window
+    ;; "wd" ;Delete (close) window
+    ;; "w0" ;Close all other windows
+
+
+    )
 )
+    ;; More ideas
+    ;; Switch to repl buffer in powershell mode
+;; (general-define-key :keymaps 'evil-insert-state-map
+;;                     (general-chord "jk") 'evil-normal-state
+;;                     (general-chord "kj") 'evil-normal-state)
 
 (use-package hydra)
 (defhydra hydra-text-scale (:timeout 4)
@@ -210,7 +237,8 @@
   (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
   (set-face-attribute 'org-checkbox nil  :inherit 'fixed-pitch)
   (set-face-attribute 'line-number nil :inherit 'fixed-pitch)
-  (set-face-attribute 'line-number-current-line nil :inherit 'fixed-pitch))
+  (set-face-attribute 'line-number-current-line nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-hide nil      :inherit 'fixed-pitch))
 
 (defun efs/org-mode-setup ()
   (org-indent-mode)
@@ -331,6 +359,7 @@
 (use-package lsp-ivy)
 
 (use-package powershell)
+; for LSP Mode, run M-x lsp-install-server pwsh-ls
 
 (use-package company
   :after lsp-mode
