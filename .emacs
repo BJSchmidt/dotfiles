@@ -125,6 +125,9 @@
   ([remap describe-variable] . counsel-describe-variable)
   ([remap describe-key] . helpful-key))
 
+(use-package undo-fu)
+(setq evil-undo-system 'undo-fu)
+
 ;;;;Evil Mode
 (use-package evil
   :init
@@ -294,7 +297,7 @@
     ; https://zhangda.wordpress.com/2016/02/15/configurations-for-beautifying-emacs-org-mode/
 
 (use-package org-roam
-      :after org
+      :ensure t
       :hook
       (after-init . org-roam-mode)
       ; :straight (:host github :repo "jethrokuan/org-roam" :branch "develop")

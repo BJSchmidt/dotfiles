@@ -199,6 +199,12 @@ prescient.el provides some helpful behavior for sorting Ivy completion candidate
   ([remap describe-key] . helpful-key))
 #+end_src
 
+* Undo
+#+begin_src emacs-lisp
+(use-package undo-fu)
+(setq evil-undo-system 'undo-fu)
+#+end_src
+
 * Keybindings
 ** Evil Mode (VI like modal editing)
 This configuration uses [[https://evil.readthedocs.io/en/latest/index.html][evil-mode]] for a Vi-like modal editing experience. [[https://github.com/emacs-evil/evil-collection][evil-collection]] is used to automatically configure various Emacs modes with Vi-like keybindings for evil-mode.
@@ -420,7 +426,7 @@ Requires sqlite3 installed on your system
 
   #+begin_src emacs-lisp
 (use-package org-roam
-      :after org
+      :ensure t
       :hook
       (after-init . org-roam-mode)
       ; :straight (:host github :repo "jethrokuan/org-roam" :branch "develop")
@@ -821,3 +827,4 @@ Dired is a built-in file manager for Emacs that does some pretty amazing things!
     (yank)
     (newline)
     (insert "#+end_src")))
+
