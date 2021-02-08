@@ -73,7 +73,7 @@
 (use-package which-key
   :init (which-key-mode)
   :diminish which-key-mode
-  :config (setq which-key-idle-delay 0.0))    ; I previously read somewhere that this shouldn't be set to 0, but instead some very short number to prevent some issue.
+  :config (setq which-key-idle-delay 0.00001))    ; Which-key shows up faster with a very small decimal value like 0.00001 instead of 0 or 0.0.
 
 (use-package ivy
   :diminish
