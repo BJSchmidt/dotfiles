@@ -156,6 +156,8 @@
 ;; Make ESC quit prompts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
+(setq user-config-file "~/repos/dotfiles/emacs.org")
+
 ;; Use general to define your own leader key & menu (a la spacemacs or doom emacs)
 ;; Note efs/leader-keys is added onto later with a hydra for text scaling.
 (use-package general
@@ -180,17 +182,27 @@
     "b" '(:ignore t :which-key "Buffers")
     "bb" '(ivy-switch-buffer :which-key "Switch Buffer")
     "bk" '(kill-this-buffer :which-key "Kill Buffer")
+    "bd" '(kill-this-buffer :which-key "Kill Buffer")
     "bn" '(evil-new-buffer :which-key "New Buffer")
 
     "f" '(:ignore t :which-key "Files")
-    ;; "ff" ;Find Files
+    "ff" '(find-file :which-key "Find Files")
+    "fc" '(find-file user-config-file)
 
     "w" '(:ignore t :which-key "Windows")
-    ;; "ww" ;switch Window
-    ;; "wc" ;close window
-    ;; "wo" ;other window
-    ;; "wd" ;Delete (close) window
-    ;; "w0" ;Close all other windows
+    "ww" '(evil-window-next :wk "Evil Window Next")
+    "wW" '(evil-window-prev :wk "Evil Window Prev")
+    "wh" '(evil-window-left :wk "Evil Window Left")
+    "wj" '(evil-window-down :wk "Evil Window Down")
+    "wh" '(evil-window-up :wk "Evil Window Up")
+    "wk" '(evil-window-right :wk "Evil Window Right")
+    "wo" '(other window :wk "Other Window")
+
+    "wc" '(delete-window :wk "Delete Window")
+    "wd" '(delete-window :wk "Delete Window")
+    "wk" '(delete-window :wk "Delete Window")
+    "w0" '(delete-other-windows :wk "Delete Other Windows")
+    "ww" '(evil-window-next :wk "Evil Window Next")
 
 
     )
