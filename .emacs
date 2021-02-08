@@ -144,6 +144,8 @@
   ;; Use visual line motions even outside of visual-line-mode buffers
   (evil-global-set-key 'motion "j" 'evil-next-visual-line)
   (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+ 
+  (evil-global-set-key 'motion "z=" 'flyspell-correct-word)
 
   (evil-set-initial-state 'messages-buffer-mode 'normal)
   (evil-set-initial-state 'dashboard-mode 'normal))
@@ -442,6 +444,9 @@
   (deft-use-filter-string-for-filename t)
   (deft-default-extension "org")
   (deft-directory org-roam-directory))
+
+;enable flyspell for all text mode buffers:
+(add-hook 'text-mode-hook 'flyspell-mode)
 
 ;; WSL2 Specific configuration:
 (when (string-match "-[Mm]icrosoft" operating-system-release)
