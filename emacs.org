@@ -8,7 +8,14 @@ I have been using emacs since June of 2019, and have used a number of configurat
 
 This configuration is primarily based on the wonderful work done by @daviwil: See https://github.com/daviwil/emacs-from-scratch and his System Builder's livestreams at https://www.youtube.com/watch?v=74zOY-vgkyw&list=PLEoMzSkcN8oPH1au7H6B7bBJ4ZO7BXjSZ
 
-* Default Font Size
+* Basic Configuration
+** User
+#+begin_src emacs-lisp
+(setq user-full-name "Ben Schmidt")
+(setq user-mail-address "benschmidt@benschmidt.tech") 
+#+end_src
+
+** Default Font Size
 #+begin_src emacs-lisp
 ;; You will most likely need to adjust this font size for your system!
 (defvar efs/default-font-size 120)
@@ -514,6 +521,11 @@ This snippet adds a hook to =org-mode= buffers so that =efs/org-babel-tangle-con
 
 #+end_src
 
+** Org Export
+#+begin_src emacs-lisp
+(setq org-export-with-section-numbers nil)
+(setq org-export-preserve-breaks t)
+#+end_src
 * Development
 ** IDE Features with lsp-mode
 *** lsp-mode

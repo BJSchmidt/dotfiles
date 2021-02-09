@@ -1,3 +1,6 @@
+(setq user-full-name "Ben Schmidt")
+(setq user-mail-address "benschmidt@benschmidt.tech")
+
 ;; You will most likely need to adjust this font size for your system!
 (defvar efs/default-font-size 120)
 (defvar efs/default-variable-font-size 120)
@@ -352,6 +355,9 @@
         ;;(org-babel-tangle))))
 ;;
   ;;(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
+
+(setq org-export-with-section-numbers nil)
+(setq org-export-preserve-breaks t)
 
 (defun efs/lsp-mode-setup ()
   (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
