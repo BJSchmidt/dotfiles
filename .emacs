@@ -31,9 +31,9 @@
 ;; Visual Settings
 (scroll-bar-mode -1)        ; Disable visible scrollbar
 (tool-bar-mode -1)          ; Disable the toolbar
-(tooltip-mode -1)           ; Disable tooltips
+(tooltip-mode t)           ; Disable tooltips
 (set-fringe-mode 10)        ; Give some breathing room
-(menu-bar-mode -1)          ; Disable the menu bar
+(menu-bar-mode t)
 (setq visible-bell t)       ; Enable Visible Bell
 (column-number-mode)        ; Enable Column Numbers in the modeline
 
@@ -163,6 +163,8 @@
 
 (setq user-config-file "~/repos/dotfiles/emacs.org")
 
+(defun open-user-config-file () (interactive) (find-file user-config-file))
+
 ;; Use general to define your own leader key & menu (a la spacemacs or doom emacs)
 ;; Note efs/leader-keys is added onto later with a hydra for text scaling.
 (use-package general
@@ -192,7 +194,7 @@
 
     "f" '(:ignore t :which-key "Files")
     "ff" '(find-file :which-key "Find Files")
-    "fc" '(find-file user-config-file)
+    "fc" '(open-user-config-file :which-key "Config File")
 
     "w" '(:ignore t :which-key "Windows")
     "ww" '(evil-window-next :wk "Evil Window Next")
@@ -208,7 +210,6 @@
     "wk" '(delete-window :wk "Delete Window")
     "w0" '(delete-other-windows :wk "Delete Other Windows")
     "ww" '(evil-window-next :wk "Evil Window Next")
-
 
     )
 )
