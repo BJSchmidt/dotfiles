@@ -1,98 +1,118 @@
-#+TITLE:     New Machine Setup
-#+AUTHOR:    Ben Schmidt
-#+EMAIL:     benschmidt@benschmidt.tech
+---
+author: Ben Schmidt
+email: benschmidt@benschmidt.tech
+title: New Machine Setup
+---
 
-* Create SSH directory if it doesn't exist already
-#+BEGIN_SRC shell
+# Create SSH directory if it doesn\'t exist already
+
+``` shell
 mkdir ~/.ssh
-#+END_SRC
+```
 
-* Copy SSH Keys to new machine
-#+BEGIN_SRC shell
+# Copy SSH Keys to new machine
+
+``` shell
 scp username@OtherMachineAddress:/mnt/user/username/Documents/.ssh/* ~/.ssh/
-#+END_SRC
+```
 
-* Fix SSH permissions
-#+BEGIN_SRC shell
+# Fix SSH permissions
+
+``` shell
 chmod 700 ~/.ssh
 chmod 644 ~/.ssh/authorized_keys
 chmod 644 ~/.ssh/known_hosts
 chmod 644 ~/.ssh/config
 chmod 600 ~/.ssh/id_rsa
 chmod 644 ~/.ssh/*.pub
-#+END_SRC
+```
 
-* Clone dotfiles repo to ~/repos/dotfiles
-#+BEGIN_SRC shell
+# Clone dotfiles repo to \~/repos/dotfiles
+
+``` shell
 git clone git@github.com:BenSchmidtTech/dotfiles.git ~/repos/dotfiles/
-#+END_SRC
+```
 
-* Create dotfiles symlinks
+# Create dotfiles symlinks
+
 Needs to be updated to check if running under WSL, and if so grab the correct profile name.
-#+BEGIN_SRC shell
-. ~/repos/dotfiles/create_symlinks.sh
-#+END_SRC
 
-* Remove old emacs version
+``` shell
+. ~/repos/dotfiles/create_symlinks.sh
+```
+
+# Remove old emacs version
+
 If you have an older Emacs version you will need to purge it before proceeding:
-** Purge Emacs
-#+BEGIN_SRC shell
+
+## Purge Emacs
+
+``` shell
 sudo apt --purge remove emacs
 sudo apt autoremove
-#+END_SRC
+```
 
-* Install Emacs
-Check that emacs version 27+ is available in your distro's package repos:
-#+BEGIN_SRC shell
+# Install Emacs
+
+Check that emacs version 27+ is available in your distro\'s package repos:
+
+``` shell
 sudo apt update
 apt-cache policy emacs
-#+END_SRC
-If that isn't Emacs27 or newer, then install it from Kevin Kelly's PPA:
+```
 
+If that isn\'t Emacs27 or newer, then install it from Kevin Kelly\'s PPA:
 
-** Installing Emacs27 from Kevin Kelley PPA
-#+BEGIN_SRC shell
+## Installing Emacs27 from Kevin Kelley PPA
+
+``` shell
 sudo add-apt-repository ppa:kelleyk/emacs
 sudo apt install emacs27
-#+END_SRC
+```
 
-*** If you get an error about emacs27_common during the install process:
-#+BEGIN_SRC shell
+### If you get an error about emacs27~common~ during the install process:
+
+``` shell
 Errors were encountered while processing:
  /tmp/apt-dpkg-install-RVK8CA/064-emacs27-common_27.1~1.git86d8d76aa3-kk2+20.04_all.deb
-#+END_SRC
+```
+
 run
-#+BEGIN_SRC shell
+
+``` shell
 sudo apt --purge remove emacs-common
 sudo apt --fix-broken install
-#+END_SRC
+```
 
+# Install other required packages for my config
 
-* Install other required packages for my config
-#+BEGIN_SRC shell
+``` shell
 # Org Roam requires sqlite3.
 sudo apt install sqlite3
 # VTerm requirements:
 sudo apt install cmake
 sudo apt install libtool-bin
-#+END_SRC
+```
 
-* Install Doom Emacs
-#+BEGIN_SRC shell
+# Install Doom Emacs
+
+``` shell
 git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
 ~/.emacs.d/bin/doom install
-#+END_SRC
+```
 
+# Doom Sync - Configure Doom
 
-* Doom Sync - Configure Doom
-#+BEGIN_SRC shell
+``` shell
 doom sync
-#+END_SRC
+```
 
-* Run emacs
-#+BEGIN_SRC shell
+# Run emacs
+
+``` shell
 emacs &
-#+END_SRC
+```
 
-* Build Org Roam Cache
-<spc> n r f
+# Build Org Roam Cache
+
+\<spc\> n r f
