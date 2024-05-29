@@ -136,5 +136,5 @@ fi
 alias em='setsid emacs'
 
 # Set git identity
-git config --global user.email "benschmidt@benschmidt.tech"
-git config --global user.name "Ben Schmidt"
+git config --global user.email "bj@alpenglow.tech"
+git config --global user.name "BJ Schmidt"
