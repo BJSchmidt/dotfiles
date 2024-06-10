@@ -116,6 +116,7 @@ if ! shopt -oq posix; then
   fi
 fi
 
+export PATH=$PATH:~/.config/emacs/bin
 export PATH=$PATH:~/.emacs.d/bin
 export PATH=$PATH:/snap/bin/flutter
 export PATH=$PATH:~/go/bin

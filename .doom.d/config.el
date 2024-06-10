@@ -22,8 +22,8 @@
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
-(setq user-full-name "Ben Schmidt"
-      user-mail-address "benschmidt@benschmidt.tech")
+(setq user-full-name "BJ Schmidt"
+      user-mail-address "bj@alpenglow.tech")
 
 
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
@@ -69,16 +69,16 @@
 ;;;; +++Org+++
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/zettels/")
+(setq org-directory "~/Nextcloud/Documents/org/")
 ;;
 ;; Org Fontify code in code blocks:
 (setq org-src-fontify-natively t)
 (setq org-return-follows-link t) ;; Use return on a link in an editable buffer will follow the link instead of inserting a new line.
 ;;
 ;; Org-Roam
-(setq org-roam-directory "~/zettels/")
+(setq org-roam-directory "~/Nextcloud/Documents/org/")
 (setq org-roam-buffer-width 0.2)
-(setq org-roam-link-title-format "ƶ:%s")
+;;(setq org-roam-link-title-format "ƶ:%s")
 ;;(add-hook 'org-roam-backlinks-mode-hook (lambda () (flyspell-mode -1))) ; disable flyspell in org-roam-backlinks buffers
 
 ;; Deft
@@ -124,15 +124,14 @@
 (setq deft-recursive t)
 (setq deft-use-filter-string-for-filename t)
 (setq deft-extensions '("org" "md" "ps1"))
-(setq deft-directory "~/zettels/")
+(setq deft-directory "~/Nextcloud/Documents/org/")
 
 ;;;; Nov.el
 (use-package! nov
- ;; :mode ("\\.epub\\'" . nov-mode)
+  ;; :mode ("\\.epub\\'" . nov-mode)
   :config
   (setq nov-save-place-file (concat doom-cache-dir "nov-places")))
-  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
->>>>>>> 79c7edcf72becd4b41908f149ee0eebf78863ea5
+(add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
 ;;;; Powershell
 ;; PWSH Path in Ubuntu should normally be /usr/bin/pwsh
 ;; However pwsh has not yet been published for Ubuntu 20.04:
@@ -204,18 +203,18 @@
   ("C-<prior>" . centaur-tabs-backward)
   ("C-<next>" . centaur-tabs-forward)
   (:map evil-normal-state-map
-   ("g t" . centaur-tabs-forward)
-   ("g T" . centaur-tabs-backward))
+        ("g t" . centaur-tabs-forward)
+        ("g T" . centaur-tabs-backward))
   )
 
 
 ;;;; WSL2 Specific configuration:
 (when (string-match "-[Mm]icrosoft" operating-system-release)
-;; WSL: WSL1 has "-Microsoft", WSL2 has "-standard-microsoft"
-;;
-;; Open Links using browser windows:
-;; https://adam.kruszewski.name/2017/09/emacs-in-wsl-and-opening-links/
-;; Another option here: https://www.reddit.com/r/bashonubuntuonwindows/comments/70i8aa/making_emacs_on_wsl_open_links_in_windows_web/
+  ;; WSL: WSL1 has "-Microsoft", WSL2 has "-standard-microsoft"
+  ;;
+  ;; Open Links using browser windows:
+  ;; https://adam.kruszewski.name/2017/09/emacs-in-wsl-and-opening-links/
+  ;; Another option here: https://www.reddit.com/r/bashonubuntuonwindows/comments/70i8aa/making_emacs_on_wsl_open_links_in_windows_web/
   (defun my--browse-url (url &optional _new-window)
     ;; new-window ignored
     "Opens link via pwsh.exe"
@@ -224,7 +223,7 @@
       (apply 'call-process "/mnt/c/Program Files/PowerShell/7/pwsh.exe" nil
 	     0 nil
 	     (list "-Command" quotedUrl))))
-  ; (apply 'call-process "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe" nil
+                                        ; (apply 'call-process "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe" nil
   (setq-default browse-url-browser-function 'my--browse-url)
 
-)
+  )
