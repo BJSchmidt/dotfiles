@@ -70,18 +70,18 @@
 ;; (setq org-bullets-bullet-list '("◉" "⁑" "⁂" "❖" "✮" "✱" "✸")))
 
 (use-package org-roam
-      :after org
-      :hook 
-      (after-init . org-roam-mode)
-      :straight (:host github :repo "jethrokuan/org-roam" :branch "develop")
-      :custom ((org-roam-directory "~/zettels/"))
-      :bind (:map org-roam-mode-map
-              (("C-c n l" . org-roam)
-               ("C-c n f" . org-roam-find-file)
-               ("C-c n g" . org-roam-show-graph)
-	       ("C-c n t" . org-roam-today))
-              :map org-mode-map
-              (("C-c n i" . org-roam-insert))))
+  :after org
+  :hook
+  (after-init . org-roam-mode)
+  :straight (:host github :repo "jethrokuan/org-roam" :branch "develop")
+  :custom ((org-roam-directory "~/zettels/"))
+  :bind (:map org-roam-mode-map
+         (("C-c n l" . org-roam)
+          ("C-c n f" . org-roam-find-file)
+          ("C-c n g" . org-roam-show-graph)
+	  ("C-c n t" . org-roam-today))
+         :map org-mode-map
+         (("C-c n i" . org-roam-insert))))
 (setq org-roam-buffer-width 0.2)
 (setq org-roam-link-title-format "ƶ:%s")
 (add-hook 'org-roam-backlinks-mode-hook (lambda () (flyspell-mode -1))) ; disable flyspell in org-roam-backlinks buffers
@@ -121,9 +121,9 @@
 (use-package powershell)
 
 (use-package pdf-tools) ; Requires some install external.
-; See: https://github.com/politza/pdf-tools
+                                        ; See: https://github.com/politza/pdf-tools
 
-;enable flyspell for all text mode buffers:
+                                        ;enable flyspell for all text mode buffers:
 (add-hook 'text-mode-hook 'flyspell-mode)
 
 ;;;; Configuration:
@@ -140,7 +140,7 @@
 ;; WSL2 Specific configuration:
 (when (string-match "-[Mm]icrosoft" operating-system-release)
   ;; WSL: WSL1 has "-Microsoft", WSL2 has "-microsoft-standard"
-  
+
   ;; Open Links using windows browser:
   ;; https://adam.kruszewski.name/2017/09/emacs-in-wsl-and-opening-links/
   ;; Another option here: https://www.reddit.com/r/bashonubuntuonwindows/comments/70i8aa/making_emacs_on_wsl_open_links_in_windows_web/
@@ -150,11 +150,11 @@
     (interactive (browse-url-interactive-arg "URL: "))
     (let ((quotedUrl (format "start '%s'" url)))
       (apply 'call-process "/mnt/c/Program Files/PowerShell/7/pwsh.exe" nil
-	     0 nil
-	     (list "-Command" quotedUrl))))
-  ; (apply 'call-process "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe" nil
+             0 nil
+             (list "-Command" quotedUrl))))
+                                        ; (apply 'call-process "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe" nil
   (setq-default browse-url-browser-function 'my--browse-url)
-)
+  )
 
 ;; Transclude files:
 ;; https://stackoverflow.com/questions/15328515/iso-transclusion-in-emacs-org-mode
