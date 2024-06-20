@@ -69,14 +69,14 @@
 ;;;; +++Org+++
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/Nextcloud/Documents/org/")
+(setq org-directory "~/org/")
 ;;
 ;; Org Fontify code in code blocks:
 (setq org-src-fontify-natively t)
 (setq org-return-follows-link t) ;; Use return on a link in an editable buffer will follow the link instead of inserting a new line.
 ;;
 ;; Org-Roam
-(setq org-roam-directory "~/Nextcloud/Documents/org/")
+(setq org-roam-directory "~/org/")
 (setq org-roam-buffer-width 0.2)
 ;;(setq org-roam-link-title-format "ƶ:%s")
 ;;(add-hook 'org-roam-backlinks-mode-hook (lambda () (flyspell-mode -1))) ; disable flyspell in org-roam-backlinks buffers
@@ -124,7 +124,7 @@
 (setq deft-recursive t)
 (setq deft-use-filter-string-for-filename t)
 (setq deft-extensions '("org" "md" "ps1"))
-(setq deft-directory "~/Nextcloud/Documents/org/")
+(setq deft-directory "~/org/")
 
 ;;;; Nov.el
 (use-package! nov
