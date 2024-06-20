@@ -49,7 +49,13 @@
   )
 
 ;; Org Agenda & Clock:
-(setq org-agenda-files (directory-files-recursively "~/zettels/" "^[^.#]+.org$"))
+;; I have way to many org files (>1000), so adding all of them to org-agenda-files is no longer effective:
+;; (setq org-agenda-files (directory-files-recursively "~/Nextcloud/Documents/org/" "^[^.#]+.org$"))
+;; Instead I need a different way to manage my agenda.
+;; For now I'll set some files explicitly:
+(setq org-agenda-files '("~/org/inbox.org"
+                         "~/org/gtd.org"
+                         "~/org/tickler.org"))
 (setq org-agenda-skip-deadline-prewarning-if-scheduled t )
 (setq org-log-note-clock-out t) ;; Prompt for a note when clocking out.
 ;; Org Fontify code in code blocks:
