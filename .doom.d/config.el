@@ -70,6 +70,13 @@
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
+
+(setq org-agenda-files '("~/org/inbox.org"
+                         "~/org/gtd.org"
+                         "~/org/tickler.org"
+                         "~/org/todo.org"
+                         "~/org/AlpenglowTech/Customers/"
+                         ))
 ;;
 ;; Org Fontify code in code blocks:
 (setq org-src-fontify-natively t)
