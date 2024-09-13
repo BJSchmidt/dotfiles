@@ -76,6 +76,7 @@
                          "~/org/tickler.org"
                          "~/org/todo.org"
                          "~/org/AlpenglowTech/Customers/"
+                         "~/org/daily.org"
                          ))
 ;;
 ;; Org Fontify code in code blocks:
@@ -85,6 +86,7 @@
 ;; Org-Roam
 (setq org-roam-directory "~/org/")
 (setq org-roam-buffer-width 0.2)
+(setq org-roam-completion-everywhere nil)
 ;;(setq org-roam-link-title-format "ƶ:%s")
 ;;(add-hook 'org-roam-backlinks-mode-hook (lambda () (flyspell-mode -1))) ; disable flyspell in org-roam-backlinks buffers
 
@@ -214,6 +216,34 @@
         ("g T" . centaur-tabs-backward))
   )
 
+;;;; Beancount
+;; A major mode for working with beancount plain text accounting files.
+;; https://github.com/beancount/beancount-mode/
+;; Clone the beancount-mode repository to ~/repos/beancount-mode/
+(add-to-list 'load-path "~/repos/beancount-mode/")
+(require 'beancount)
+(add-to-list 'auto-mode-alist '("\\.beancount\\'" . beancount-mode))
+
+;; beancount outline-minor-mode - enables folding of lines starting with * or ;;;
+(add-hook 'beancount-mode-hook #'outline-minor-mode)
+(add-hook 'beancount-mode-hook #'linum-on)
+(add-hook 'beancount-mode-hook #'column-number-mode)
+
+(define-key beancount-mode-map (kbd "C-c C-n") #'outline-next-visible-heading)
+(define-key beancount-mode-map (kbd "C-c C-p") #'outline-previous-visible-heading)
+
+;; The automatic indentation behavior is defined by Emacs auto indent mechanism,
+;; however, it can be surprising or undesired.
+;; It can be disabled setting electric-indent-chars to nil after loading beancount-mode:
+;;
+;;
+;; (add-hook 'beancount-mode-hook
+;; (lambda () (setq-local electric-indent-chars nil)))
+(defun my-enable-beancount-electric-indent
+    (setq-local electric-indent-chars t))
+
+;; enable on-the-fly checks on your ledger file using bean-check via flymake
+(add-hook 'beancount-mode-hook #'flymake-bean-check-enable)
 
 ;;;; WSL2 Specific configuration:
 (when (string-match "-[Mm]icrosoft" operating-system-release)

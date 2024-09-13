@@ -1,4 +1,4 @@
-;;;; Ben Schmidt's .emacs config
+;;;; BJ Schmidt's .emacs config
 ;; 12/4/2019
 
 ;;;; straight.el: next-generation, purely functional package manager for the Emacs hacker.
@@ -40,7 +40,7 @@
 ;;; Org Mode:
 (use-package org
   :bind (("C-c l" . org-store-link)
-	 ("C-c C-l" . org-insert-link)))
+         ("C-c C-l" . org-insert-link)))
 
 (add-hook 'org-mode-hook #'custom-org-hook) ;https://emacs.stackexchange.com/questions/5358/proper-way-to-enable-minor-mode
 (defun custom-org-hook ()
@@ -55,7 +55,12 @@
 ;; For now I'll set some files explicitly:
 (setq org-agenda-files '("~/org/inbox.org"
                          "~/org/gtd.org"
-                         "~/org/tickler.org"))
+                         "~/org/tickler.org"
+                         "~/org/todo.org"
+                         "~/org/AlpenglowTech/Customers/"
+                         ))
+;; It would be nice to have all customer files added to org-agenda-files
+;; Also should set a custom todo state flow for tickets: (New InProgress Completed ToBill Closed) (Hold?)
 (setq org-agenda-skip-deadline-prewarning-if-scheduled t )
 (setq org-log-note-clock-out t) ;; Prompt for a note when clocking out.
 ;; Org Fontify code in code blocks:
@@ -74,16 +79,16 @@
   :hook
   (after-init . org-roam-mode)
   :straight (:host github :repo "jethrokuan/org-roam" :branch "develop")
-  :custom ((org-roam-directory "~/zettels/"))
+  :custom ((org-roam-directory "~/org/"))
   :bind (:map org-roam-mode-map
          (("C-c n l" . org-roam)
           ("C-c n f" . org-roam-find-file)
           ("C-c n g" . org-roam-show-graph)
-	  ("C-c n t" . org-roam-today))
+          ("C-c n t" . org-roam-today))
          :map org-mode-map
          (("C-c n i" . org-roam-insert))))
 (setq org-roam-buffer-width 0.2)
-(setq org-roam-link-title-format "ƶ:%s")
+(setq org-roam-link-title-format "%s")
 (add-hook 'org-roam-backlinks-mode-hook (lambda () (flyspell-mode -1))) ; disable flyspell in org-roam-backlinks buffers
 
 (use-package org-noter)
@@ -225,8 +230,8 @@
  '(pdf-view-midnight-colors (cons "#f8f8f2" "#282a36"))
  '(tool-bar-mode nil)
  '(uniquify-buffer-name-style (quote forward) nil (uniquify))
- '(user-full-name "Ben Schmidt")
- '(user-mail-address "benschmidt@benschmidt.tech")
+ '(user-full-name "BJ Schmidt")
+ '(user-mail-address "bj@alpenglow.tech")
  '(vc-annotate-background "#282a36")
  '(vc-annotate-color-map
    (list

@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: Insert Transaction
+# uuid:
+# key: i
+# binding: C-c i
+# condition: t
+# expand-env: ((yas-indent-lin 'fixed))
+# --
+2024-${1:`(format-time-string "%m")`}-${2:`(format-time-string "%d")`} * \"$3\"
+           $0
