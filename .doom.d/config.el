@@ -60,10 +60,10 @@
 (setq which-key-idle-delay 0.0001)
 ;; Disable CentaurTabs for which-key buffers:
 ;; https://emacs.stackexchange.com/questions/59554/how-do-i-disable-centaur-tabs-in-ispell-choices-buffer
-(defun wk-no-tabs (&optional prefix-keys from-keymap filter prefix-title)
-  (with-current-buffer which-key--buffer
-    (centaur-tabs-local-mode)))
-(advice-add 'which-key--create-buffer-and-show :after #'wk-no-tabs)
+;; (defun wk-no-tabs (&optional prefix-keys from-keymap filter prefix-title)
+;;   (with-current-buffer which-key--buffer
+;;     (centaur-tabs-local-mode)))
+;; (advice-add 'which-key--create-buffer-and-show :after #'wk-no-tabs)
 
 
 ;;;; +++Org+++
@@ -185,34 +185,34 @@
 (setq exec-path (append exec-path '("~/go/bin")))
 
 ;;;; +++centaur-tabs+++
-(use-package centaur-tabs
-  :config
-  (centaur-tabs-mode t)
-  (setq centaur-tabs-style "wave"
-        centaur-tabs-height 32
-        centaur-tabs-set-modified-marker t
-        centaur-tabs-modified-marker "o"
-        centaur-tabs-set-icons t
-        centaur-tabs-gray-out-icons 'buffer
-        centaur-tabs-set-bar 'under
-        x-underline-at-descent-line t)
-  (defun centaur-tabs-hide-tab (x)
-    (let ((name (format "%s" x)))
-      (or
-       (string-prefix-p "*epc" name)
-       (string-prefix-p "*helm" name)
-       (string-prefix-p "*Helm" name)
-       (string-prefix-p "*Compile-Log*" name)
-       (string-prefix-p "*lsp" name)
-       (and (string-prefix-p "magit" name)
-            (not (file-name-extension name))))))
-  :bind
-  ("C-<prior>" . centaur-tabs-backward)
-  ("C-<next>" . centaur-tabs-forward)
-  (:map evil-normal-state-map
-        ("g t" . centaur-tabs-forward)
-        ("g T" . centaur-tabs-backward))
-  )
+;; (use-package centaur-tabs
+;;   :config
+;;   (centaur-tabs-mode t)
+;;   (setq centaur-tabs-style "wave"
+;;         centaur-tabs-height 32
+;;         centaur-tabs-set-modified-marker t
+;;         centaur-tabs-modified-marker "o"
+;;         centaur-tabs-set-icons t
+;;         centaur-tabs-gray-out-icons 'buffer
+;;         centaur-tabs-set-bar 'under
+;;         x-underline-at-descent-line t)
+;;   (defun centaur-tabs-hide-tab (x)
+;;     (let ((name (format "%s" x)))
+;;       (or
+;;        (string-prefix-p "*epc" name)
+;;        (string-prefix-p "*helm" name)
+;;        (string-prefix-p "*Helm" name)
+;;        (string-prefix-p "*Compile-Log*" name)
+;;        (string-prefix-p "*lsp" name)
+;;        (and (string-prefix-p "magit" name)
+;;             (not (file-name-extension name))))))
+;;   :bind
+;;   ("C-<prior>" . centaur-tabs-backward)
+;;   ("C-<next>" . centaur-tabs-forward)
+;;   (:map evil-normal-state-map
+;;         ("g t" . centaur-tabs-forward)
+;;         ("g T" . centaur-tabs-backward))
+;;   )
 
 
 ;;;; WSL2 Specific configuration:
