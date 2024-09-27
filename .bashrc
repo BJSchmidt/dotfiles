@@ -116,11 +116,12 @@ if ! shopt -oq posix; then
   fi
 fi
 
+alias emacs="flatpak run org.gnu.emacs"
 export PATH=$PATH:~/.config/emacs/bin
 export PATH=$PATH:~/.emacs.d/bin
 export PATH=$PATH:/snap/bin/flutter
 export PATH=$PATH:~/go/bin
-
+export PATH=$PATH:~/.local/bin
 export GO111MODULE=on
 
 # Test for WSL and configure accordingly:
@@ -139,3 +140,5 @@ alias em='setsid emacs'
 # Set git identity
 git config --global user.email "bj@alpenglow.tech"
 git config --global user.name "BJ Schmidt"
+
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
